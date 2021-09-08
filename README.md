@@ -1,16 +1,41 @@
-# miniproject1
+# sw-mini-project
 
-A new Flutter project.
+> This ReadMe details Yanni Pang and Nicole Kwon's SW Mini Project for EC463. 
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+### Table of Contents
 
-A few resources to get you started if this is your first Flutter project:
+- [Description of Mini-Project](#description)
+- [Journal of Agile Development](#journal)
+- [Explanation of Code](#explanation) 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+---
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Description
+
+nfjdnsfjnjfsnd
+
+---
+
+## Journal
+
+sndjanfjoanfjoa
+
+#### Sprint Outline
+
+ndsajkndkand
+ 
+#### Sprint Overview
+
+fdnfnsdfibdisf
+
+---
+
+## Explanation
+
+huihuihuihuih
+
+---
+
+[Back to the Top](#sw-mini-project)
