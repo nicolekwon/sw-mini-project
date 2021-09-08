@@ -1,16 +1,73 @@
-# miniproject1
+# sw-mini-project
 
-A new Flutter project.
+> This ReadMe details Yanni Pang and Nicole Kwon's SW Mini Project for EC463. 
 
-## Getting Started
+---
 
-This project is a starting point for a Flutter application.
+### Table of Contents
 
-A few resources to get you started if this is your first Flutter project:
+- [Description of Mini-Project](#description)
+- [Journal of Agile Development](#journal)
+- [Explanation of Code](#explanation) 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+---
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Description
+
+nfjdnsfjnjfsnd
+
+---
+
+## Journal
+
+sndjanfjoanfjoa
+
+
+#### Sprint Outline
+
+Sprint 1: 9/2/21-9/5/21
+- Setting up the Flutter environment (Android Studio as IDE and Dart as coding language)
+- Watching and going through [Part 1](https://flutter.dev/docs/get-started/codelab) and [Part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2#0) tutorials in Flutter documentation
+
+Sprint 2: 9/6/21-9/7/21
+- Initializing collaborative Github repository
+- Creating new Flutter application
+- Creating new Firebase project
+- Connecting Flutter and Firebase
+- Deciding and dividing up rest of issues
+
+Sprint 3: 9/8/21-9/12/21
+- Implementing Gmail authentication
+- Implementing barcode scanner and search bar (to identify ingredients)
+- Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
+- Setting up navigation bar (to browse pages with different functionalities)
+- Adding user input for amount of servings
+- Connecting components together
+
+Sprint 4: 9/13/21-9/17/21
+- Calling Firebase for viewing and editing stored user recipes and daily food intakes
+- Continuing to connect components
+- Cleaning up and finalizing code
+
+
+#### Division of Work
+
+Yanni:
+- Firebase (for Gmail authentication and database of recipes)
+
+Nicole: 
+- Barcode scanner and search bar
+- Call to FDA API
+
+Both: 
+- Clean UI and coding practices
+
+---
+
+## Explanation
+
+huihuihuihuih
+
+---
+
+[Back to the Top](#sw-mini-project)
