@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _googleSignIn.signOut();
   }
   Future<void> _handleSignIn() async {
+    //handle sign in
     try {
       await _googleSignIn.signIn();
     } catch (error) {
