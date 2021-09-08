@@ -4,7 +4,7 @@
 
 ---
 
-### Table of Contents
+## Table of Contents
 
 - [Description of Mini-Project](#description)
 - [Journal of Agile Development](#journal)
