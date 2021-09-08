@@ -54,12 +54,14 @@ Sprint 4: 9/13/21-9/17/21
 
 Yanni:
 - Firebase (for Gmail authentication and database of recipes)
+- Route to different pages
 
 Nicole: 
 - Barcode scanner and search bar
 - Call to FDA API
 
 Both: 
+- Creation of recipe functionality
 - Clean UI and coding practices
 
 ---
