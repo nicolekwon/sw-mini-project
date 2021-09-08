@@ -27,7 +27,7 @@ sndjanfjoanfjoa
 
 Sprint 1: 9/2/21-9/5/21
 - Setting up the Flutter environment (Android Studio as IDE and Dart as coding language)
-- Watching and going through [Part 1](https://flutter.dev/docs/get-started/codelab) and [Part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2#0) tutorials in Flutter documentation
+- Watching and going through [Part 1](https://flutter.dev/docs/get-started/codelab) and [Part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2#0) of tutorials in Flutter documentation
 
 Sprint 2: 9/6/21-9/7/21
 - Initializing collaborative Github repository
