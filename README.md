@@ -26,28 +26,29 @@ sndjanfjoanfjoa
 #### Sprint Outline
 
 Sprint 1: 9/2/21-9/5/21
-- Setting up the Flutter environment (Android Studio as IDE and Dart as coding language)
-- Watching and going through [Part 1](https://flutter.dev/docs/get-started/codelab) and [Part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2#0) of tutorials in Flutter documentation
+- [x] Setting up the Flutter environment (Android Studio as IDE and Dart as coding language)
+- [x] Watching and going through [Part 1](https://flutter.dev/docs/get-started/codelab) and [Part 2](https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2#0) of tutorials in Flutter documentation
 
 Sprint 2: 9/6/21-9/7/21
-- Initializing collaborative Github repository
-- Creating new Flutter application
-- Creating new Firebase project
-- Connecting Flutter and Firebase
+- [x] Initializing collaborative Github repository
+- [x] Creating new Flutter application
+- [x] Creating new Firebase project
+- [-] Connecting Flutter and Firebase
 - Deciding and dividing up rest of issues
 
 Sprint 3: 9/8/21-9/12/21
-- Implementing Gmail authentication
-- Implementing barcode scanner and search bar (to identify ingredients)
-- Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
-- Setting up navigation bar (to browse pages with different functionalities)
-- Adding user input for amount of servings
-- Connecting components together
+- [x] Implementing Gmail authentication
+- [ ] Connect Gmail auth with Firebase
+- [ ] Implementing barcode scanner and search bar (to identify ingredients)
+- [ ] Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
+- [ ] Setting up navigation bar (to browse pages with different functionalities)
+- [ ] Adding user input for amount of servings
+- [ ] Connecting components together
 
 Sprint 4: 9/13/21-9/17/21
-- Calling Firebase for viewing and editing stored user recipes and daily food intakes
-- Continuing to connect components
-- Cleaning up and finalizing code
+- [ ] Calling Firebase for viewing and editing stored user recipes and daily food intakes
+- [ ] Continuing to connect components
+- [ ] Cleaning up and finalizing code
 
 
 #### Division of Work
