@@ -67,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
   Future<void> _handleSignOut() async {
+    //Handle sign out
     _googleSignIn.signOut();
   }
   Future<void> _handleSignIn() async {
