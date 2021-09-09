@@ -25,13 +25,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: LoginScreen(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, required this.title}) : super(key: key);
+class LoginScreen extends StatefulWidget {
+  LoginScreen({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -45,10 +45,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _LoginScreenState extends State<LoginScreen> {
   GoogleSignInAccount? _currentUser;
 
   @override
@@ -58,7 +58,7 @@ class _MyHomePageState extends State<MyHomePage> {
       setState(() {
         _currentUser = account;
       });
-      if (_currentUser != null){
+      if (_currentUser != null) {
         setState(() {
           _currentUser = account;
         });
@@ -66,10 +66,12 @@ class _MyHomePageState extends State<MyHomePage> {
       _handleSignIn();
     });
   }
+
   Future<void> _handleSignOut() async {
     //Handle sign out
     _googleSignIn.signOut();
   }
+
   Future<void> _handleSignIn() async {
     //handle sign in
     try {
@@ -113,8 +115,7 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Icon(Icons.add),
         ), // This trailing comma makes auto-formatting nicer for build methods.
       );
-    }
-    else {
+    } else {
       return Scaffold(
         appBar: AppBar(
           // Here we take the value from the MyHomePage object that was created by
@@ -125,11 +126,24 @@ class _MyHomePageState extends State<MyHomePage> {
           // Center is a layout widget. It takes a single child and positions it
           // in the middle of the parent.
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('You are not logged in.'),
-              MaterialButton(
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child: Text(
+                      'You are not logged in.',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
                 onPressed: _handleSignIn,
-                child: Text('Login!'),
+                child: Text('Login with Google!'),
               )
             ],
           ),
@@ -141,5 +155,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ), // This trailing comma makes auto-formatting nicer for build methods.
       );
     }
+  }
+}
+
+class MainPage extends StatelessWidget {
+  const MainPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
