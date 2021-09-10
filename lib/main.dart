@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -68,8 +71,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  //Handle sign out
+  Future<http.Response> search(String item) {
+    return http.post(
+      Uri.parse(
+          'https://api.nal.usda.gov/fdc/v1/foods/search?api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        "query": "Cheddar cheese",
+      }),
+    );
+  }
+
   Future<void> _handleSignOut() async {
-    //Handle sign out
     _googleSignIn.signOut();
   }
 
@@ -92,7 +108,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
     var searchterm;
 
-
     if (user != null) {
       return Scaffold(
         appBar: AppBar(
@@ -105,22 +120,27 @@ class _MyHomePageState extends State<MyHomePage> {
           // in the middle of the parent.
           child: Column(
             children: [
-              Text(user.displayName ?? ''),
-              MaterialButton(
-                onPressed: _handleSignOut,
-                child: Text('Log Out!'),
-              ),
+              Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                Padding(
+                    padding: EdgeInsets.only(top: 20, bottom: 20),
+                    child: Text(
+                      user.displayName ?? '',
+                      style: TextStyle(fontSize: 15),
+                    )),
+                IconButton(onPressed: _handleSignOut, icon: Icon(Icons.logout))
+              ]),
               Row(
                 children: [
                   Expanded(
                       child: Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
-                      onChanged: (text){
+                      onChanged: (text) {
                         searchterm = text;
                       },
                       decoration: InputDecoration(
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20)),
                           labelText: 'Search ingredients',
                           suffixIcon: IconButton(
                             icon: Icon(CupertinoIcons.camera),
@@ -140,21 +160,36 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                          onPressed: (){
-                            print(searchterm);
-                          },
-                          icon: Icon(CupertinoIcons.search),
-                      color: Colors.white,)),
+                        onPressed: () {
+                          print(searchterm);
+                        },
+                        icon: Icon(CupertinoIcons.search),
+                        color: Colors.white,
+                      )),
                 ],
               )
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => null,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
+          floatingActionButton: Row(mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                IconButton(onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BarcodeScanner()),
+                  );
+                }, icon: Icon(Icons.list)),
+                IconButton(onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BarcodeScanner()),
+                  );
+                }, icon: Icon(CupertinoIcons.barcode_viewfinder))
+              ]
+          ),
+        // This trailing comma makes auto-formatting nicer for build methods.
       );
     } else {
       return Scaffold(
