@@ -90,6 +90,9 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+    var searchterm;
+
+
     if (user != null) {
       return Scaffold(
         appBar: AppBar(
@@ -113,6 +116,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
+                      onChanged: (text){
+                        searchterm = text;
+                      },
                       decoration: InputDecoration(
                           border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
                           labelText: 'Search ingredients',
@@ -134,7 +140,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                          onPressed: () => null,
+                          onPressed: (){
+                            print(searchterm);
+                          },
                           icon: Icon(CupertinoIcons.search),
                       color: Colors.white,)),
                 ],
