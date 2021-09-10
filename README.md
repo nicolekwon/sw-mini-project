@@ -38,8 +38,9 @@ Sprint 2: 9/6/21-9/7/21
 
 Sprint 3: 9/8/21-9/12/21
 - [x] Implementing Gmail authentication
-- [ ] Connect Gmail auth with Firebase
-- [ ] Implementing barcode scanner and search bar (to identify ingredients)
+- [ ] Implementing barcode scanner 
+- [x] Implement basic search bar to print out "searched" terms
+- [ ] Perform search by using API
 - [ ] Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
 - [ ] Setting up navigation bar (to browse pages with different functionalities)
 - [ ] Adding user input for amount of servings
@@ -54,11 +55,11 @@ Sprint 4: 9/13/21-9/17/21
 #### Division of Work
 
 Yanni:
-- Firebase (for Gmail authentication and database of recipes)
+- Barcode scanner and search bar
 - Route to different pages
 
 Nicole: 
-- Barcode scanner and search bar
+- Firebase (for Gmail authentication and database of recipes)
 - Call to FDA API
 
 Both: 
