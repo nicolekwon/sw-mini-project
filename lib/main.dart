@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -25,13 +26,13 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: LoginScreen(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class LoginScreen extends StatefulWidget {
-  LoginScreen({Key? key, required this.title}) : super(key: key);
+class MyHomePage extends StatefulWidget {
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -45,10 +46,10 @@ class LoginScreen extends StatefulWidget {
   final String title;
 
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _MyHomePageState extends State<MyHomePage> {
   GoogleSignInAccount? _currentUser;
 
   @override
@@ -105,6 +106,38 @@ class _LoginScreenState extends State<LoginScreen> {
               MaterialButton(
                 onPressed: _handleSignOut,
                 child: Text('Log Out!'),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                      child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                          labelText: 'Search ingredients',
+                          suffixIcon: IconButton(
+                            icon: Icon(CupertinoIcons.camera),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => BarcodeScanner()),
+                              );
+                            },
+                          )),
+                    ),
+                  )),
+                  Ink(
+                      decoration: const ShapeDecoration(
+                        color: Colors.lightBlue,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                          onPressed: () => null,
+                          icon: Icon(CupertinoIcons.search),
+                      color: Colors.white,)),
+                ],
               )
             ],
           ),
@@ -158,11 +191,26 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 }
 
-class MainPage extends StatelessWidget {
-  const MainPage({Key? key}) : super(key: key);
+class BarcodeScanner extends StatelessWidget {
+  const BarcodeScanner({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text('Barcode Scanner'),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [Text('Hello')],
+          )
+        ],
+      ),
+    );
   }
 }
