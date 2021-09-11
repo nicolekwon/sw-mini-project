@@ -224,6 +224,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
+
+
+
+
+
 // Barcode Scanner
 class MyScanner extends StatefulWidget {
   @override
@@ -262,22 +267,21 @@ class _MyScannerState extends State<MyScanner> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        home: Scaffold(
-            appBar: AppBar(title: const Text('Barcode scan')),
-            body: Builder(builder: (BuildContext context) {
-              return Container(
-                  alignment: Alignment.center,
-                  child: Flex(
-                      direction: Axis.vertical,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ElevatedButton(
-                            onPressed: () => scanBarcodeNormal(),
-                            child: Text('Start barcode scan')),
-                        Text('Scan result : $_scanBarcode\n',
-                            style: TextStyle(fontSize: 20))
-                      ]));
-            })));
+    return Scaffold(
+          appBar: AppBar(title: const Text('Barcode scan')),
+          body: Builder(builder: (BuildContext context) {
+            return Container(
+                alignment: Alignment.center,
+                child: Flex(
+                    direction: Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                          onPressed: () => scanBarcodeNormal(),
+                          child: Text('Start barcode scan')),
+                      Text('Scan result : $_scanBarcode\n',
+                          style: TextStyle(fontSize: 20))
+                    ]));
+          }));
   }
 }
