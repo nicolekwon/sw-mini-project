@@ -42,9 +42,9 @@ Sprint 3: 9/8/21-9/12/21
 - [x] Implementing barcode scanner 
 - [x] Implement basic search bar to print out "searched" terms
 - [x] Perform search by using API
-- [ ] Parse search results
+- [x] Parse search results
 - [ ] Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
-- [ ] Setting up navigation bar (to browse pages with different functionalities)
+- [x] Setting up navigation bar (to browse pages with different functionalities)
 - [ ] Adding user input for amount of servings
 - [ ] Connecting components together
 
