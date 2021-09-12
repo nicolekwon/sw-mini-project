@@ -250,7 +250,10 @@ class _MyScannerState extends State<MyScanner> {
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      print(barcodeScanRes);
+      String obj = barcodeScanRes.substring(1);
+      final response = await http.get(Uri.parse('https://api.nal.usda.gov/fdc/v1/foods/search?query=' + obj + '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+      print((jsonDecode(response.body)));
+
     } on PlatformException {
       barcodeScanRes = 'Failed to get platform version.';
     }

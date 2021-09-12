@@ -2,6 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSCalendarsUsageDescription</key>
+      <string>$(PRODUCT_NAME) calendar events</string>
+    <key>NSRemindersUsageDescription</key>
+      <string>$(PRODUCT_NAME) reminder use</string>
+    <key>NSCameraUsageDescription</key>
+      <string>This app requires to access your photo library to show image on profile and send via chat</string>
+    <key>NSMicrophoneUsageDescription</key>
+      <string>This app requires to access your microphone to record video with your voice send via chat</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+      <string>This app requires to access your photo library to show image on profile and send via chat</string>
+    <key>NSContactsUsageDescription</key>
+       <string>$(PRODUCT_NAME) contact use</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+      <string>$(PRODUCT_NAME) location use</string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+      <string>$(PRODUCT_NAME) location use</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -18,6 +34,17 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.169831246419-jl5am041k127veilnhvcdq4binvca59v</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
@@ -41,21 +68,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<!-- Put me in the [my_project]/ios/Runner/Info.plist file -->
-	<!-- Google Sign-in Section -->
-	<key>CFBundleURLTypes</key>
-	<array>
-		<dict>
-			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<!-- TODO Replace this value: -->
-				<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-				<string>com.googleusercontent.apps.169831246419-jl5am041k127veilnhvcdq4binvca59v</string>
-			</array>
-		</dict>
-	</array>
-<!-- End of the Google Sign-in Section -->
 </dict>
 </plist>
