@@ -1,11 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
+import 'dart:convert';
+import 'package:miniproject1/models/results.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -74,17 +74,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //Handle sign out
-  Future<http.Response> search(String item) {
-    return http.post(
+  Future <http.Response> search(String item) async {
+    final res = await http.post(
       Uri.parse(
           'https://api.nal.usda.gov/fdc/v1/foods/search?api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        "query": "Cheddar cheese",
+        "query": item,
       }),
     );
+
+    return res;
   }
 
   Future<void> _handleSignOut() async {
@@ -158,8 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        onPressed: () {
-                          print(searchterm);
+                        onPressed: () async {
+                          var result = await search(searchterm);
+                          Welcome welcome = new Welcome.fromJson(json.decode(result.body));
+                          //Example of parsing
+                          print(welcome.foods![0]!.ingredients);
                         },
                         icon: Icon(CupertinoIcons.search),
                         color: Colors.white,
@@ -207,9 +212,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
               ),
-              ElevatedButton(
+              ElevatedButton.icon(
                 onPressed: _handleSignIn,
-                child: Text('Login with Google!'),
+                label: Text('Login with Google!'),
+                icon: Icon(Icons.login),
               )
             ],
           ),
