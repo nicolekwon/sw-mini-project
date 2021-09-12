@@ -4,7 +4,9 @@
 
 ---
 
+
 ## Table of Contents
+
 
 - [Description of Mini-Project](#description)
 - [Journal of Agile Development](#journal)
@@ -21,7 +23,6 @@ nfjdnsfjnjfsnd
 ## Journal
 
 sndjanfjoanfjoa
-
 
 #### Sprint Outline
 
@@ -66,6 +67,7 @@ Nicole:
 Both: 
 - Creation of recipe functionality
 - Clean UI and coding practices
+
 
 ---
 
