@@ -33,14 +33,15 @@ Sprint 2: 9/6/21-9/7/21
 - [x] Initializing collaborative Github repository
 - [x] Creating new Flutter application
 - [x] Creating new Firebase project
-- [-] Connecting Flutter and Firebase
-- Deciding and dividing up rest of issues
+- [x] Connecting Flutter and Firebase
+- [x] Deciding and dividing up rest of issues
 
 Sprint 3: 9/8/21-9/12/21
 - [x] Implementing Gmail authentication
-- [ ] Implementing barcode scanner 
+- [x] Implementing barcode scanner 
 - [x] Implement basic search bar to print out "searched" terms
-- [ ] Perform search by using API
+- [x] Perform search by using API
+- [ ] Parse search results
 - [ ] Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
 - [ ] Setting up navigation bar (to browse pages with different functionalities)
 - [ ] Adding user input for amount of servings
