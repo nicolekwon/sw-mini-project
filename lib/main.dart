@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -145,11 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           suffixIcon: IconButton(
                             icon: Icon(CupertinoIcons.camera),
                             onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => BarcodeScanner()),
-                              );
+                              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                             },
                           )),
                     ),
@@ -174,18 +172,10 @@ class _MyHomePageState extends State<MyHomePage> {
           floatingActionButton: Row(mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BarcodeScanner()),
-                  );
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                 }, icon: Icon(Icons.list)),
                 IconButton(onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => BarcodeScanner()),
-                  );
+                  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                 }, icon: Icon(CupertinoIcons.barcode_viewfinder))
               ]
           ),
@@ -234,26 +224,67 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class BarcodeScanner extends StatelessWidget {
-  const BarcodeScanner({Key? key}) : super(key: key);
+
+
+
+
+
+// Barcode Scanner
+class MyScanner extends StatefulWidget {
+  @override
+  _MyScannerState createState() => _MyScannerState();
+}
+
+class _MyScannerState extends State<MyScanner> {
+  String _scanBarcode = 'Unknown';
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  // Platform messages are asynchronous, so we initialize in an async method.
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    // Platform messages may fail, so we use a try/catch PlatformException.
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+      String obj = barcodeScanRes.substring(1);
+      final response = await http.get(Uri.parse('https://api.nal.usda.gov/fdc/v1/foods/search?query=' + obj + '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+      print((jsonDecode(response.body)));
+
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      _scanBarcode = barcodeScanRes;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text('Barcode Scanner'),
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [Text('Hello')],
-          )
-        ],
-      ),
-    );
+          appBar: AppBar(title: const Text('Barcode scan')),
+          body: Builder(builder: (BuildContext context) {
+            return Container(
+                alignment: Alignment.center,
+                child: Flex(
+                    direction: Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      ElevatedButton(
+                          onPressed: () => scanBarcodeNormal(),
+                          child: Text('Start barcode scan')),
+                      Text('Scan result : $_scanBarcode\n',
+                          style: TextStyle(fontSize: 20))
+                    ]));
+          }));
   }
 }
