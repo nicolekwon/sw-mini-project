@@ -160,11 +160,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        onPressed: () async {
-                          var result = await search(searchterm);
-                          Welcome welcome = new Welcome.fromJson(json.decode(result.body));
+                        onPressed: () {
+                          // ADD LINE OF CODE BELOW OF THIS COMMENT
+                          // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MySearcher()));
+                          //var result = await search(searchterm);
+                          //Welcome welcome = new Welcome.fromJson(json.decode(result.body));
                           //Example of parsing
-                          print(welcome.foods![0]!.ingredients);
+                          //print(welcome.foods![0]!.ingredients);
                         },
                         icon: Icon(CupertinoIcons.search),
                         color: Colors.white,
@@ -234,6 +236,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
+// Search Bar
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // Barcode Scanner
 class MyScanner extends StatefulWidget {
@@ -289,7 +305,7 @@ class _MyScannerState extends State<MyScanner> {
           body: Builder(builder: (BuildContext context) {
             return Container(
                 alignment: Alignment.center,
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(20.0),
                 child: Flex(
                     direction: Axis.vertical,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -297,7 +313,7 @@ class _MyScannerState extends State<MyScanner> {
                       ElevatedButton(
                           onPressed: () => scanBarcodeNormal(),
                           child: Text('Start barcode scan')),
-                      Text('\nName: $_scanName \n\nDescription: $_scanDescription \n',
+                      Text('\nName: $_scanName \n\nIngredients: $_scanDescription \n',
                           style: TextStyle(fontSize: 20))
                     ]));
           }));
