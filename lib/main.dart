@@ -242,7 +242,8 @@ class MyScanner extends StatefulWidget {
 }
 
 class _MyScannerState extends State<MyScanner> {
-  String _scanBarcode = 'Unknown';
+  String _scanName = '';
+  String _scanDescription = '';
 
   @override
   void initState() {
@@ -251,17 +252,23 @@ class _MyScannerState extends State<MyScanner> {
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
-    String barcodeScanRes;
+    String name = 'Unknown';
+    String description = 'Unknown';
+    String barcodeScanRes = 'Unknown';
+
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
       String obj = barcodeScanRes.substring(1);
       final response = await http.get(Uri.parse('https://api.nal.usda.gov/fdc/v1/foods/search?query=' + obj + '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
-      print((jsonDecode(response.body)));
+      Welcome welcome = new Welcome.fromJson(json.decode(response.body));
+      //Example of parsing
+      name = welcome.foods![0]!.description!;
+      description = welcome.foods![0]!.ingredients!;
 
     } on PlatformException {
-      barcodeScanRes = 'Failed to get platform version.';
+      name = 'Failed to get platform version.';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -270,7 +277,8 @@ class _MyScannerState extends State<MyScanner> {
     if (!mounted) return;
 
     setState(() {
-      _scanBarcode = barcodeScanRes;
+      _scanName = name;
+      _scanDescription = description;
     });
   }
 
@@ -281,6 +289,7 @@ class _MyScannerState extends State<MyScanner> {
           body: Builder(builder: (BuildContext context) {
             return Container(
                 alignment: Alignment.center,
+                padding: const EdgeInsets.all(8.0),
                 child: Flex(
                     direction: Axis.vertical,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -288,7 +297,7 @@ class _MyScannerState extends State<MyScanner> {
                       ElevatedButton(
                           onPressed: () => scanBarcodeNormal(),
                           child: Text('Start barcode scan')),
-                      Text('Scan result : $_scanBarcode\n',
+                      Text('\nName: $_scanName \n\nDescription: $_scanDescription \n',
                           style: TextStyle(fontSize: 20))
                     ]));
           }));
