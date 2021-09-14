@@ -443,6 +443,7 @@ class _RandomWordsState extends State<RandomWords> {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemBuilder: /*1*/ (context, i) {
+          _suggestions.clear();
           if (i.isOdd) return const Divider();
           /*2*/
 
