@@ -6,15 +6,12 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'dart:convert';
 import 'package:miniproject1/models/results.dart';
-
-import 'package:english_words/english_words.dart';
-
 // Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
 // Initializing Firebase API and helper methods
-final _suggestions = <WordPair>[];
-final _saved = <WordPair>{};
+final _suggestions = <WelcomeFoods>[];
+final _saved = <WelcomeFoods>{};
 final _biggerFont = const TextStyle(fontSize: 18.0);
 
 // Implementing list icon on app bar
@@ -24,10 +21,10 @@ void pushSaved(BuildContext context) {
       // NEW lines from here...
       builder: (context) {
         final tiles = _saved.map(
-              (pair) {
+              (food) {
             return ListTile(
               title: Text(
-                pair.asPascalCase,
+                food.lowercaseDescription ?? '',
                 style: _biggerFont,
               ),
             );
@@ -174,6 +171,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print(error);
     }
   }
+  var searchterm;
 
   Widget build(BuildContext context) {
     GoogleSignInAccount? user = _currentUser;
@@ -183,7 +181,6 @@ class _MyHomePageState extends State<MyHomePage> {
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
-    var searchterm;
 
     if (user != null) {
       return Scaffold(
@@ -244,13 +241,13 @@ class _MyHomePageState extends State<MyHomePage> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        onPressed: () {
+                        onPressed: () async {
                           // ADD LINE OF CODE BELOW OF THIS COMMENT
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new RandomWords()));
-                          //var result = await search(searchterm);
-                          //Welcome welcome = new Welcome.fromJson(json.decode(result.body));
+                          var result = await search(searchterm);
+                          Welcome welcome = new Welcome.fromJson(json.decode(result.body));
+                          print(welcome.foods![0]!.ingredients);
+                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new RandomWords(welcome)));
                           //Example of parsing
-                          //print(welcome.foods![0]!.ingredients);
                         },
                         icon: Icon(CupertinoIcons.search),
                         color: Colors.white,
@@ -434,11 +431,14 @@ class _MyScannerState extends State<MyScanner> {
 
 // Search Bar
 class RandomWords extends StatefulWidget {
+  final Welcome passedResult;
+  RandomWords(this.passedResult);
   @override
   State<RandomWords> createState() => _RandomWordsState();
 }
 
 class _RandomWordsState extends State<RandomWords> {
+
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
@@ -448,17 +448,22 @@ class _RandomWordsState extends State<RandomWords> {
 
           final index = i ~/ 2; /*3*/
           if (index >= _suggestions.length) {
-            _suggestions.addAll(generateWordPairs().take(10)); /*4*/
+
+            for(var i = 0; i < widget.passedResult.foods!.length; i++){
+                print("OK");
+                _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+              
+            }
           }
           return _buildRow(_suggestions[index]);
         });
   }
 
-  Widget _buildRow(WordPair pair) {
-    final alreadySaved = _saved.contains(pair);
+  Widget _buildRow(WelcomeFoods food) {
+    final alreadySaved = _saved.contains(food);
     return ListTile(
       title: Text(
-        pair.asPascalCase,
+        food.description.toString(),
         style: _biggerFont,
       ),
       trailing: Icon(
@@ -469,9 +474,9 @@ class _RandomWordsState extends State<RandomWords> {
       onTap: () {
         setState(() {
           if (alreadySaved) {
-            _saved.remove(pair);
+            _saved.remove(food);
           } else {
-            _saved.add(pair);
+            _saved.add(food);
           }
         });
       },
