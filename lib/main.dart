@@ -17,7 +17,8 @@ final _biggerFont = const TextStyle(fontSize: 18.0);
 
 // Implementing list icon on app bar
 void pushSaved(BuildContext context) {
-  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new ItemList()));
+  Navigator.of(context).push(
+      new MaterialPageRoute(builder: (BuildContext context) => new ItemList()));
 }
 
 class ItemList extends StatefulWidget {
@@ -28,31 +29,32 @@ class ItemList extends StatefulWidget {
 }
 
 class _ItemListState extends State<ItemList> {
-
   @override
-
   Widget build(BuildContext context) {
     final tiles = _saved.map(
-          (food) {
+      (food) {
         return ListTile(
-            title: Text(
-              food.lowercaseDescription ?? '',
-              style: _biggerFont,
-            ),
-            trailing: Icon(Icons.remove_circle),
-            onTap: () {
+          title: Text(
+            food.lowercaseDescription ?? '',
+            style: _biggerFont,
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.remove_circle),
+            onPressed: () {
               setState(() {
-                  _saved.remove(food);
+                _saved.remove(food);
               });
-            });
+            },
+          ),
+        );
       },
     );
     final divided = tiles.isNotEmpty
         ? ListTile.divideTiles(
-      context: context,
-      tiles: tiles,
-    ).toList()
-        : <Widget>[];
+            context: context,
+            tiles: tiles,
+          ).toList()
+        : <Widget>[Center(child: ElevatedButton.icon(onPressed: ()=> Navigator.pop(context), icon: Icon(CupertinoIcons.add), label: Text('Add item to shopping list')))];
 
     return Scaffold(
       appBar: AppBar(
@@ -460,7 +462,7 @@ class _RandomWordsState extends State<RandomWords> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Startup Name Generator'),
+        title: const Text('Results'),
         actions: [
           IconButton(
             icon: const Icon(Icons.list),
