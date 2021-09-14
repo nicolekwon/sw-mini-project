@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'dart:convert';
 import 'package:miniproject1/models/results.dart';
+
 // Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -16,36 +17,50 @@ final _biggerFont = const TextStyle(fontSize: 18.0);
 
 // Implementing list icon on app bar
 void pushSaved(BuildContext context) {
-  Navigator.of(context).push(
-    MaterialPageRoute<void>(
-      // NEW lines from here...
-      builder: (context) {
-        final tiles = _saved.map(
-              (food) {
-            return ListTile(
-              title: Text(
-                food.lowercaseDescription ?? '',
-                style: _biggerFont,
-              ),
-            );
-          },
-        );
-        final divided = tiles.isNotEmpty
-            ? ListTile.divideTiles(
-          context: context,
-          tiles: tiles,
-        ).toList()
-            : <Widget>[];
+  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new ItemList()));
+}
 
-        return Scaffold(
-          appBar: AppBar(
-            title: const Text('Shopping List'),
-          ),
-          body: ListView(children: divided),
-        );
-      }, //...to here.
-    ),
-  );
+class ItemList extends StatefulWidget {
+  const ItemList({Key? key}) : super(key: key);
+
+  @override
+  _ItemListState createState() => _ItemListState();
+}
+
+class _ItemListState extends State<ItemList> {
+
+  @override
+
+  Widget build(BuildContext context) {
+    final tiles = _saved.map(
+          (food) {
+        return ListTile(
+            title: Text(
+              food.lowercaseDescription ?? '',
+              style: _biggerFont,
+            ),
+            trailing: Icon(Icons.remove_circle),
+            onTap: () {
+              setState(() {
+                  _saved.remove(food);
+              });
+            });
+      },
+    );
+    final divided = tiles.isNotEmpty
+        ? ListTile.divideTiles(
+      context: context,
+      tiles: tiles,
+    ).toList()
+        : <Widget>[];
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Shopping List'),
+      ),
+      body: ListView(children: divided),
+    );
+  }
 }
 
 // Implementing scanning mechanism
@@ -59,25 +74,20 @@ Future<List> scanBarcodeNormal() async {
     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
     String obj = barcodeScanRes.substring(1);
-    final response = await http.get(Uri.parse('https://api.nal.usda.gov/fdc/v1/foods/search?query=' + obj + '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+    final response = await http.get(Uri.parse(
+        'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+            obj +
+            '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
     Welcome welcome = new Welcome.fromJson(json.decode(response.body));
     //Example of parsing
     name = welcome.foods![0]!.description!;
     description = welcome.foods![0]!.ingredients!;
-
   } on PlatformException {
     name = 'Failed to get platform version.';
   }
 
   return [name, description];
 }
-
-
-
-
-
-
-
 
 void main() {
   runApp(MyApp());
@@ -144,7 +154,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   //Handle sign out
-  Future <http.Response> search(String item) async {
+  Future<http.Response> search(String item) async {
     final res = await http.post(
       Uri.parse(
           'https://api.nal.usda.gov/fdc/v1/foods/search?api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'),
@@ -171,6 +181,7 @@ class _MyHomePageState extends State<MyHomePage> {
       print(error);
     }
   }
+
   var searchterm;
 
   Widget build(BuildContext context) {
@@ -189,9 +200,9 @@ class _MyHomePageState extends State<MyHomePage> {
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
           actions: [
-            IconButton(icon: const Icon(Icons.list),
-              onPressed: ()
-              {
+            IconButton(
+              icon: const Icon(Icons.list),
+              onPressed: () {
                 pushSaved(context);
               },
               tooltip: 'Saved Suggestions',
@@ -244,9 +255,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () async {
                           // ADD LINE OF CODE BELOW OF THIS COMMENT
                           var result = await search(searchterm);
-                          Welcome welcome = new Welcome.fromJson(json.decode(result.body));
+                          Welcome welcome =
+                              new Welcome.fromJson(json.decode(result.body));
                           print(welcome.foods![0]!.ingredients);
-                          Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new RandomWords(welcome)));
+                          Navigator.of(context).push(new MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  new RandomWords(welcome)));
                           //Example of parsing
                         },
                         icon: Icon(CupertinoIcons.search),
@@ -303,31 +317,6 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // Barcode Scanner
 class MyScanner extends StatefulWidget {
   @override
@@ -354,12 +343,14 @@ class _MyScannerState extends State<MyScanner> {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
           '#ff6666', 'Cancel', true, ScanMode.BARCODE);
       String obj = barcodeScanRes.substring(1);
-      final response = await http.get(Uri.parse('https://api.nal.usda.gov/fdc/v1/foods/search?query=' + obj + '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+      final response = await http.get(Uri.parse(
+          'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+              obj +
+              '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
       Welcome welcome = new Welcome.fromJson(json.decode(response.body));
       //Example of parsing
       name = welcome.foods![0]!.description!;
       description = welcome.foods![0]!.ingredients!;
-
     } on PlatformException {
       name = 'Failed to get platform version.';
     }
@@ -378,67 +369,49 @@ class _MyScannerState extends State<MyScanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-            title: const Text('Barcode Scan'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.list),
-                onPressed: () {
-                  pushSaved(context);
-                },
-              ),
-            ],
-          ),
-          body: Builder(builder: (BuildContext context) {
-            return Container(
-                alignment: Alignment.center,
-                padding: const EdgeInsets.all(20.0),
-                child: Flex(
-                    direction: Axis.vertical,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      ElevatedButton(
-                          onPressed: ()
-                          {
-                            scanBarcodeNormal();
-                          },
-                          child: Text('Start barcode scan')),
-                      Text('\nName: $_scanName \n\nIngredients: $_scanDescription \n',
-                          style: TextStyle(fontSize: 20))
-                    ]
-                )
-            );
-          }));
+        appBar: AppBar(
+          title: const Text('Barcode Scan'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.list),
+              onPressed: () {
+                pushSaved(context);
+              },
+            ),
+          ],
+        ),
+        body: Builder(builder: (BuildContext context) {
+          return Container(
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(20.0),
+              child: Flex(
+                  direction: Axis.vertical,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    ElevatedButton(
+                        onPressed: () {
+                          scanBarcodeNormal();
+                        },
+                        child: Text('Start barcode scan')),
+                    Text(
+                        '\nName: $_scanName \n\nIngredients: $_scanDescription \n',
+                        style: TextStyle(fontSize: 20))
+                  ]));
+        }));
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // Search Bar
 class RandomWords extends StatefulWidget {
   final Welcome passedResult;
+
   RandomWords(this.passedResult);
+
   @override
   State<RandomWords> createState() => _RandomWordsState();
 }
 
 class _RandomWordsState extends State<RandomWords> {
-
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
@@ -449,11 +422,10 @@ class _RandomWordsState extends State<RandomWords> {
 
           final index = i ~/ 2; /*3*/
           if (index >= _suggestions.length) {
+            for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+              print("OK");
+              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
 
-            for(var i = 0; i < widget.passedResult.foods!.length; i++){
-                print("OK");
-                _suggestions.add(widget.passedResult.foods![i]!); /*4*/
-              
             }
           }
           return _buildRow(_suggestions[index]);
