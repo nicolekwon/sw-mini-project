@@ -51,6 +51,35 @@ void pushSaved(BuildContext context) {
   );
 }
 
+// Implementing scanning mechanism
+Future<List> scanBarcodeNormal() async {
+  String name = 'Unknown';
+  String description = 'Unknown';
+  String barcodeScanRes = 'Unknown';
+
+  // Platform messages may fail, so we use a try/catch PlatformException.
+  try {
+    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+    String obj = barcodeScanRes.substring(1);
+    final response = await http.get(Uri.parse('https://api.nal.usda.gov/fdc/v1/foods/search?query=' + obj + '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+    Welcome welcome = new Welcome.fromJson(json.decode(response.body));
+    //Example of parsing
+    name = welcome.foods![0]!.description!;
+    description = welcome.foods![0]!.ingredients!;
+
+  } on PlatformException {
+    name = 'Failed to get platform version.';
+  }
+
+  return [name, description];
+}
+
+
+
+
+
+
 
 
 void main() {
@@ -75,7 +104,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Shopping List App'),
     );
   }
 }
@@ -201,8 +230,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           labelText: 'Search ingredients',
                           suffixIcon: IconButton(
                             icon: Icon(CupertinoIcons.camera),
-                            onPressed: () {
-                              Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
+                            onPressed: () async {
+                              List test = await scanBarcodeNormal();
+                              print(test);
+                              // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                             },
                           )),
                     ),
@@ -229,16 +260,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-          floatingActionButton: Row(mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                IconButton(onPressed: () {
-                  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
-                }, icon: Icon(Icons.list)),
-                IconButton(onPressed: () {
-                  Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
-                }, icon: Icon(CupertinoIcons.barcode_viewfinder))
-              ]
-          ),
         // This trailing comma makes auto-formatting nicer for build methods.
       );
     } else {
@@ -387,7 +408,8 @@ class _MyScannerState extends State<MyScanner> {
                           child: Text('Start barcode scan')),
                       Text('\nName: $_scanName \n\nIngredients: $_scanDescription \n',
                           style: TextStyle(fontSize: 20))
-                    ])
+                    ]
+                )
             );
           }));
   }
