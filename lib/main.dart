@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'dart:convert';
 import 'package:miniproject1/models/results.dart';
+import 'package:recase/recase.dart';
 
 // Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -19,6 +20,69 @@ final _biggerFont = const TextStyle(fontSize: 18.0);
 void pushSaved(BuildContext context) {
   Navigator.of(context).push(
       new MaterialPageRoute(builder: (BuildContext context) => new ItemList()));
+}
+
+void showDetail(BuildContext context, WelcomeFoods food) {
+  Navigator.of(context).push(new MaterialPageRoute(
+      builder: (BuildContext context) => new ShowDetail(food)));
+}
+
+class ShowDetail extends StatelessWidget {
+  WelcomeFoods result;
+
+  ShowDetail(this.result);
+
+  Widget _buildDetails(WelcomeFoods result) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(result.description!),
+      ),
+      body: ListView(children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.all(20),
+              child: Text(
+                result.lowercaseDescription!.titleCase,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+            ),
+          ],
+        ),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Text(
+                "Category: ",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Text(result.foodCategory!.titleCase,
+                  style: TextStyle(fontSize: 20))
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(top: 20, left: 20),
+          child: Text("Ingredients: ",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 20),
+          child: Text(
+            result.ingredients!,
+            style: TextStyle(fontSize: 15),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _buildDetails(result);
+  }
 }
 
 class ItemList extends StatefulWidget {
@@ -46,6 +110,7 @@ class _ItemListState extends State<ItemList> {
               });
             },
           ),
+          onTap: () => showDetail(context, food),
         );
       },
     );
@@ -54,7 +119,13 @@ class _ItemListState extends State<ItemList> {
             context: context,
             tiles: tiles,
           ).toList()
-        : <Widget>[Center(child: ElevatedButton.icon(onPressed: ()=> Navigator.pop(context), icon: Icon(CupertinoIcons.add), label: Text('Add item to shopping list')))];
+        : <Widget>[
+            Center(
+                child: ElevatedButton.icon(
+                    onPressed: () => Navigator.pop(context),
+                    icon: Icon(CupertinoIcons.add),
+                    label: Text('Add item to shopping list')))
+          ];
 
     return Scaffold(
       appBar: AppBar(
@@ -438,7 +509,7 @@ class _RandomWordsState extends State<RandomWords> {
     final alreadySaved = _saved.contains(food);
     return ListTile(
       title: Text(
-        food.description.toString(),
+        food.description.toString().titleCase,
         style: _biggerFont,
       ),
       trailing: Icon(
