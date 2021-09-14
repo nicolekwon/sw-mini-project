@@ -9,7 +9,49 @@ import 'package:miniproject1/models/results.dart';
 
 import 'package:english_words/english_words.dart';
 
+// Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
+
+// Initializing Firebase API and helper methods
+final _suggestions = <WordPair>[];
+final _saved = <WordPair>{};
+final _biggerFont = const TextStyle(fontSize: 18.0);
+
+// Implementing list icon on app bar
+void pushSaved(BuildContext context) {
+  Navigator.of(context).push(
+    MaterialPageRoute<void>(
+      // NEW lines from here...
+      builder: (context) {
+        final tiles = _saved.map(
+              (pair) {
+            return ListTile(
+              title: Text(
+                pair.asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          },
+        );
+        final divided = tiles.isNotEmpty
+            ? ListTile.divideTiles(
+          context: context,
+          tiles: tiles,
+        ).toList()
+            : <Widget>[];
+
+        return Scaffold(
+          appBar: AppBar(
+            title: const Text('Shopping List'),
+          ),
+          body: ListView(children: divided),
+        );
+      }, //...to here.
+    ),
+  );
+}
+
+
 
 void main() {
   runApp(MyApp());
@@ -120,6 +162,15 @@ class _MyHomePageState extends State<MyHomePage> {
           // Here we take the value from the MyHomePage object that was created by
           // the App.build method, and use it to set our appbar title.
           title: Text(widget.title),
+          actions: [
+            IconButton(icon: const Icon(Icons.list),
+              onPressed: ()
+              {
+                pushSaved(context);
+              },
+              tooltip: 'Saved Suggestions',
+            ),
+          ],
         ),
         body: Center(
           // Center is a layout widget. It takes a single child and positions it
@@ -309,7 +360,17 @@ class _MyScannerState extends State<MyScanner> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(title: const Text('Barcode scan')),
+          appBar: AppBar(
+            title: const Text('Barcode Scan'),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.list),
+                onPressed: () {
+                  pushSaved(context);
+                },
+              ),
+            ],
+          ),
           body: Builder(builder: (BuildContext context) {
             return Container(
                 alignment: Alignment.center,
@@ -319,7 +380,10 @@ class _MyScannerState extends State<MyScanner> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       ElevatedButton(
-                          onPressed: () => scanBarcodeNormal(),
+                          onPressed: ()
+                          {
+                            scanBarcodeNormal();
+                          },
                           child: Text('Start barcode scan')),
                       Text('\nName: $_scanName \n\nIngredients: $_scanDescription \n',
                           style: TextStyle(fontSize: 20))
@@ -327,6 +391,7 @@ class _MyScannerState extends State<MyScanner> {
             );
           }));
   }
+
 }
 
 
@@ -352,17 +417,12 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final _saved = <WordPair>{};
-  final _biggerFont = const TextStyle(fontSize: 18.0);
-  // #enddocregion RWS-var
-
-  // #docregion _buildSuggestions
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
         itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return const Divider(); /*2*/
+          if (i.isOdd) return const Divider();
+          /*2*/
 
           final index = i ~/ 2; /*3*/
           if (index >= _suggestions.length) {
@@ -371,9 +431,7 @@ class _RandomWordsState extends State<RandomWords> {
           return _buildRow(_suggestions[index]);
         });
   }
-  // #enddocregion _buildSuggestions
 
-  // #docregion _buildRow
   Widget _buildRow(WordPair pair) {
     final alreadySaved = _saved.contains(pair);
     return ListTile(
@@ -397,9 +455,7 @@ class _RandomWordsState extends State<RandomWords> {
       },
     );
   }
-  // #enddocregion _buildRow
 
-  // #docregion RWS-build
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -408,48 +464,13 @@ class _RandomWordsState extends State<RandomWords> {
         actions: [
           IconButton(
             icon: const Icon(Icons.list),
-            onPressed: _pushSaved,
-            tooltip: 'Saved Suggestions',
+            onPressed: () {
+              pushSaved(context);
+            },
           ),
         ],
       ),
       body: _buildSuggestions(),
     );
   }
-  // #enddocregion RWS-build
-
-  void _pushSaved() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        // NEW lines from here...
-        builder: (context) {
-          final tiles = _saved.map(
-                (pair) {
-              return ListTile(
-                title: Text(
-                  pair.asPascalCase,
-                  style: _biggerFont,
-                ),
-              );
-            },
-          );
-          final divided = tiles.isNotEmpty
-              ? ListTile.divideTiles(
-            context: context,
-            tiles: tiles,
-          ).toList()
-              : <Widget>[];
-
-          return Scaffold(
-            appBar: AppBar(
-              title: const Text('Saved Suggestions'),
-            ),
-            body: ListView(children: divided),
-          );
-        }, //...to here.
-      ),
-    );
-  }
-// #docregion RWS-var
 }
-// #enddocregion RWS-var
