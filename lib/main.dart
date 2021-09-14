@@ -35,7 +35,7 @@ class ShowDetail extends StatelessWidget {
   Widget _buildDetails(WelcomeFoods result) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(result.description!),
+        title: Text(result.description!.titleCase),
       ),
       body: ListView(children: [
         Row(
@@ -99,11 +99,11 @@ class _ItemListState extends State<ItemList> {
       (food) {
         return ListTile(
           title: Text(
-            food.lowercaseDescription ?? '',
+            food.lowercaseDescription!.titleCase ?? '',
             style: _biggerFont,
           ),
           trailing: IconButton(
-            icon: Icon(Icons.remove_circle),
+            icon: Icon(Icons.delete),
             onPressed: () {
               setState(() {
                 _saved.remove(food);
@@ -497,8 +497,8 @@ class _RandomWordsState extends State<RandomWords> {
           if (index >= _suggestions.length) {
             for (var i = 0; i < widget.passedResult.foods!.length; i++) {
               print("OK");
-              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
 
+              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
             }
           }
           return _buildRow(_suggestions[index]);
@@ -513,7 +513,7 @@ class _RandomWordsState extends State<RandomWords> {
         style: _biggerFont,
       ),
       trailing: Icon(
-        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        alreadySaved ? Icons.delete : Icons.add_circle_outline,
         color: alreadySaved ? Colors.red : null,
         semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
       ),
