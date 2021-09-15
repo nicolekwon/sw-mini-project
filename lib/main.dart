@@ -136,7 +136,7 @@ class _ItemListState extends State<ItemList> {
   }
 }
 
-// Implementing scanning mechanism
+// Implementing barcode scanning mechanism
 Future<Welcome> scanBarcodeNormal() async {
   String barcodeScanRes = 'Unknown';
   Welcome welcome;
