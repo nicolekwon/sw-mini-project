@@ -99,7 +99,7 @@ class _ItemListState extends State<ItemList> {
       (food) {
         return ListTile(
           title: Text(
-            food.lowercaseDescription!.titleCase ?? '',
+            food.lowercaseDescription!.titleCase,
             style: _biggerFont,
           ),
           trailing: IconButton(
@@ -488,45 +488,59 @@ class _RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
+        itemCount: widget.passedResult.foods!.length,
         itemBuilder: /*1*/ (context, i) {
           _suggestions.clear();
           if (i.isOdd) return const Divider();
           /*2*/
 
-          final index = i ~/ 2; /*3*/
+          final index = i; /*3*/
           if (index >= _suggestions.length) {
-            for (var i = 0; i < widget.passedResult.foods!.length; i++) {
-              print("OK");
+            if (widget.passedResult.foods!.length >= 1) {
+              for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+                print(widget.passedResult.foods![i]!.description);
 
-              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+                _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+              }
             }
           }
-          return _buildRow(_suggestions[index]);
+          print(index);
+          return _buildRow(_suggestions[index], false);
         });
   }
 
-  Widget _buildRow(WelcomeFoods food) {
+  Widget _buildRow(WelcomeFoods food, bool full) {
     final alreadySaved = _saved.contains(food);
-    return ListTile(
-      title: Text(
-        food.description.toString().titleCase,
-        style: _biggerFont,
-      ),
-      trailing: Icon(
-        alreadySaved ? Icons.delete : Icons.add_circle_outline,
-        color: alreadySaved ? Colors.red : null,
-        semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
-      ),
-      onTap: () {
-        setState(() {
-          if (alreadySaved) {
-            _saved.remove(food);
-          } else {
-            _saved.add(food);
-          }
-        });
-      },
-    );
+   if( !full) {
+      return ListTile(
+        title: Text(
+          food.description.toString().titleCase,
+          style: _biggerFont,
+        ),
+        trailing: Icon(
+          alreadySaved ? Icons.delete : Icons.add_circle_outline,
+          color: alreadySaved ? Colors.red : null,
+          semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+        ),
+        onTap: () {
+          setState(() {
+            if (alreadySaved) {
+              _saved.remove(food);
+            } else {
+              _saved.add(food);
+            }
+          });
+        },
+      );
+    } else {
+     return ListTile(
+       title: Text(
+         '',
+         style: _biggerFont,
+       ),
+     );
+
+   }
   }
 
   @override
