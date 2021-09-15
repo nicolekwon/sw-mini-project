@@ -306,7 +306,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Welcome test = await scanBarcodeNormal();
                               Navigator.of(context).push(new MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                  new RandomWords(test)));
+                                  new RandomWords2(test)));
                               // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                             },
                           )),
@@ -383,7 +383,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// Search Bar
+// Search Bar Results
 class RandomWords extends StatefulWidget {
   final Welcome passedResult;
 
@@ -394,10 +394,93 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
+
+  Widget _buildSuggestions() {
+    // Fix range error
+    for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+      _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+    }
+
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: _suggestions.length,
+        itemBuilder: /*1*/ (context, i) {
+          _suggestions.clear();
+          if (i.isOdd) return const Divider();
+          /*2*/
+
+          final index = i ~/ 2; /*3*/
+          if (index >= _suggestions.length) {
+
+            for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+              print("OK");
+
+              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+            }
+          }
+          return _buildRow(_suggestions[index]);
+        });
+  }
+
+  Widget _buildRow(WelcomeFoods food) {
+    final alreadySaved = _saved.contains(food);
+    return ListTile(
+      title: Text(
+        food.description.toString().titleCase,
+        style: _biggerFont,
+      ),
+      trailing: Icon(
+        alreadySaved ? Icons.delete : Icons.add_circle_outline,
+        color: alreadySaved ? Colors.red : null,
+        semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(food);
+          } else {
+            _saved.add(food);
+          }
+        });
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Results'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () {
+              pushSaved(context);
+            },
+          ),
+        ],
+      ),
+      body: _buildSuggestions(),
+    );
+  }
+}
+
+
+// Barcode Scanner Results
+class RandomWords2 extends StatefulWidget {
+  final Welcome passedResult;
+
+  RandomWords2(this.passedResult);
+
+  @override
+  State<RandomWords2> createState() => _RandomWordsState2();
+}
+
+class _RandomWordsState2 extends State<RandomWords2> {
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
-        itemCount: _suggestions.length+1,
+        itemCount: 1,
         itemBuilder: /*1*/ (context, i) {
           _suggestions.clear();
           if (i.isOdd) return const Divider();
@@ -457,3 +540,8 @@ class _RandomWordsState extends State<RandomWords> {
     );
   }
 }
+
+
+
+
+
