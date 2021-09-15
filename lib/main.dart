@@ -337,7 +337,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       child: IconButton(
                         onPressed: () async {
-                          // ADD LINE OF CODE BELOW OF THIS COMMENT
                           var result = await search(searchterm);
                           Welcome welcome =
                               new Welcome.fromJson(json.decode(result.body));
@@ -391,17 +390,10 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => null,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
       );
     }
   }
 }
-
-
 
 
 
