@@ -99,7 +99,7 @@ class _ItemListState extends State<ItemList> {
       (food) {
         return ListTile(
           title: Text(
-            food.lowercaseDescription!.titleCase ?? '',
+            food.lowercaseDescription!.titleCase,
             style: _biggerFont,
           ),
           trailing: IconButton(
@@ -161,6 +161,17 @@ Future<List> scanBarcodeNormal() async {
 
   return [name, description];
 }
+
+
+
+
+
+
+
+
+
+
+
 
 void main() {
   runApp(MyApp());
@@ -390,89 +401,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// Barcode Scanner
-class MyScanner extends StatefulWidget {
-  @override
-  _MyScannerState createState() => _MyScannerState();
-}
 
-class _MyScannerState extends State<MyScanner> {
-  String _scanName = '';
-  String _scanDescription = '';
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> scanBarcodeNormal() async {
-    String name = 'Unknown';
-    String description = 'Unknown';
-    String barcodeScanRes = 'Unknown';
 
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      String obj = barcodeScanRes.substring(1);
-      final response = await http.get(Uri.parse(
-          'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
-              obj +
-              '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
-      Welcome welcome = new Welcome.fromJson(json.decode(response.body));
-      //Example of parsing
-      name = welcome.foods![0]!.description!;
-      description = welcome.foods![0]!.ingredients!;
-    } on PlatformException {
-      name = 'Failed to get platform version.';
-    }
 
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
 
-    setState(() {
-      _scanName = name;
-      _scanDescription = description;
-    });
-  }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Barcode Scan'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.list),
-              onPressed: () {
-                pushSaved(context);
-              },
-            ),
-          ],
-        ),
-        body: Builder(builder: (BuildContext context) {
-          return Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(20.0),
-              child: Flex(
-                  direction: Axis.vertical,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                        onPressed: () {
-                          scanBarcodeNormal();
-                        },
-                        child: Text('Start barcode scan')),
-                    Text(
-                        '\nName: $_scanName \n\nIngredients: $_scanDescription \n',
-                        style: TextStyle(fontSize: 20))
-                  ]));
-        }));
-  }
-}
+
 
 // Search Bar
 class RandomWords extends StatefulWidget {
@@ -497,7 +433,6 @@ class _RandomWordsState extends State<RandomWords> {
           if (index >= _suggestions.length) {
             for (var i = 0; i < widget.passedResult.foods!.length; i++) {
               print("OK");
-
               _suggestions.add(widget.passedResult.foods![i]!); /*4*/
             }
           }
