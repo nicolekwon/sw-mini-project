@@ -150,11 +150,6 @@ Future<Welcome> scanBarcodeNormal() async {
             obj +
             '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
     welcome = new Welcome.fromJson(json.decode(response.body));
-    //Example of parsing
-    /* name = welcome.foods![0]!.description!;
-    description = welcome.foods![0]!.ingredients!;
-    category = welcome.foods![0]!.foodCategory!; */
-
   return welcome;
 }
 
@@ -402,6 +397,7 @@ class _RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
     return ListView.builder(
         padding: const EdgeInsets.all(16.0),
+        itemCount: _suggestions.length+1,
         itemBuilder: /*1*/ (context, i) {
           _suggestions.clear();
           if (i.isOdd) return const Divider();
