@@ -16,7 +16,7 @@
 
 ## Description
 
-nfjdnsfjnjfsnd
+This is a shopping list app designed for shoppers who frequently forget what they need to purchase at the store. The shopping list is protected behind Google authentication and the list's contents are sync'd to Google's Firestore via Firebase.
 
 ---
 
@@ -43,14 +43,14 @@ Sprint 3: 9/8/21-9/12/21
 - [x] Implement basic search bar to print out "searched" terms
 - [x] Perform search by using API
 - [x] Parse search results
-- [ ] Setting up different pages (log-in page, homepage, page to confirm/add recipes, page to view recipes) 
+- [x] Setting up different pages (log-in page, homepage, page to add or delete foods added to the shopping list) 
+- [x] Add page to show details and nutrition of the food 
 - [x] Setting up navigation bar (to browse pages with different functionalities)
-- [ ] Adding user input for amount of servings
-- [ ] Connecting components together
+- [x] Connecting components together
 
 Sprint 4: 9/13/21-9/17/21
-- [ ] Calling Firebase for viewing and editing stored user recipes and daily food intakes
-- [ ] Continuing to connect components
+- [ ] Calling Firebase for storing and adding foods that were added by the user
+- [x] Continuing to connect components
 - [ ] Cleaning up and finalizing code
 
 
