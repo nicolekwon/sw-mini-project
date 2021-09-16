@@ -299,26 +299,33 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _handleSignIn() async {
     //handle sign in
-    await Firebase.initializeApp();
+
     try {
-      //Handle sign in silently
       await _googleSignIn.signIn();
     } catch (error) {
       print(error);
     }
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-              email: _currentUser!.email, password: _currentUser!.id);
+    await Firebase.initializeApp();
+    final GoogleSignInAuthentication googleAuth = await _currentUser!.authentication;
+    // try {
+    //   UserCredential userCredential = await FirebaseAuth.instance
+    //       .signInWithEmailAndPassword(
+    //           email: _currentUser.email, password: _currentUser.id);
+    //   print('A user found for that email.');
+    // } on FirebaseAuthException catch (e) {
+    //   if (e.code == 'user-not-found') {
+    //     UserCredential userCredential = await FirebaseAuth.instance
+    //         .createUserWithEmailAndPassword(
+    //             email: _currentUser!.email, password: _currentUser!.id);
+    //     print('No user found for that email.');
+    //   }
+    // }
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+      await FirebaseAuth.instance.signInWithCredential(credential);
       print('A user found for that email.');
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: _currentUser!.email, password: _currentUser!.id);
-        print('No user found for that email.');
-      }
-    }
   }
 
   var searchterm;
