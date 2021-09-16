@@ -9,6 +9,7 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'dart:convert';
 import 'package:miniproject1/models/results.dart';
 import 'package:recase/recase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -272,7 +273,6 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
       _handleSignIn();
-
     });
   }
 
@@ -306,7 +306,8 @@ class _MyHomePageState extends State<MyHomePage> {
       print(error);
     }
     await Firebase.initializeApp();
-    final GoogleSignInAuthentication googleAuth = await _currentUser!.authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await _currentUser!.authentication;
     // try {
     //   UserCredential userCredential = await FirebaseAuth.instance
     //       .signInWithEmailAndPassword(
@@ -324,8 +325,10 @@ class _MyHomePageState extends State<MyHomePage> {
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      print('A user found for that email.');
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    print('A user found for that email.');
+    //firestore instance
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
   }
 
   var searchterm;
@@ -474,11 +477,20 @@ class RandomWords extends StatefulWidget {
 class _RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
     if (widget.passedResult.foods!.length == 0) {
-      return Column(mainAxisAlignment: MainAxisAlignment.center,children: [
-          Row(children: [
-            Text("No foods found.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
-          ], mainAxisAlignment: MainAxisAlignment.center,)
-      ],);
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Text(
+                "No foods found.",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          )
+        ],
+      );
     } else {
       return ListView.builder(
           padding: const EdgeInsets.all(16.0),
