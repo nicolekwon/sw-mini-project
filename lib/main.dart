@@ -294,6 +294,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _handleSignOut() async {
     _googleSignIn.signOut();
+    await FirebaseAuth.instance.signOut();
   }
 
   Future<void> _handleSignIn() async {
@@ -301,7 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
     await Firebase.initializeApp();
     try {
       //Handle sign in silently
-      await _googleSignIn.signInSilently();
+      await _googleSignIn.signIn();
     } catch (error) {
       print(error);
     }
@@ -447,11 +448,6 @@ class _MyHomePageState extends State<MyHomePage> {
               )
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => null,
-          tooltip: 'Increment',
-          child: Icon(Icons.add),
         ), // This trailing comma makes auto-formatting nicer for build methods.
       );
     }
