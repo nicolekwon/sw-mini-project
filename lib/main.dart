@@ -136,30 +136,21 @@ class _ItemListState extends State<ItemList> {
   }
 }
 
-// Implementing scanning mechanism
-Future<List> scanBarcodeNormal() async {
-  String name = 'Unknown';
-  String description = 'Unknown';
+// Implementing barcode scanning mechanism
+Future<Welcome> scanBarcodeNormal() async {
   String barcodeScanRes = 'Unknown';
+  Welcome welcome;
 
   // Platform messages may fail, so we use a try/catch PlatformException.
-  try {
-    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-    String obj = barcodeScanRes.substring(1);
-    final response = await http.get(Uri.parse(
-        'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
-            obj +
-            '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
-    Welcome welcome = new Welcome.fromJson(json.decode(response.body));
-    //Example of parsing
-    name = welcome.foods![0]!.description!;
-    description = welcome.foods![0]!.ingredients!;
-  } on PlatformException {
-    name = 'Failed to get platform version.';
-  }
-
-  return [name, description];
+  barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+      '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+  String obj = barcodeScanRes.substring(1);
+  final response = await http.get(Uri.parse(
+      'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+          obj +
+          '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+  welcome = new Welcome.fromJson(json.decode(response.body));
+  return welcome;
 }
 
 void main() {
@@ -312,8 +303,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           suffixIcon: IconButton(
                             icon: Icon(CupertinoIcons.camera),
                             onPressed: () async {
-                              List test = await scanBarcodeNormal();
-                              print(test);
+                              Welcome test = await scanBarcodeNormal();
+                              Navigator.of(context).push(new MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                  new RandomWords2(test)));
                               // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                             },
                           )),
@@ -541,6 +534,81 @@ class _RandomWordsState extends State<RandomWords> {
      );
 
    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Results'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () {
+              pushSaved(context);
+            },
+          ),
+        ],
+      ),
+      body: _buildSuggestions(),
+    );
+  }
+}
+
+// Barcode Scanner Results
+class RandomWords2 extends StatefulWidget {
+  final Welcome passedResult;
+
+  RandomWords2(this.passedResult);
+
+  @override
+  State<RandomWords2> createState() => _RandomWordsState2();
+}
+
+class _RandomWordsState2 extends State<RandomWords2> {
+  Widget _buildSuggestions() {
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: 1,
+        itemBuilder: /*1*/ (context, i) {
+          _suggestions.clear();
+          if (i.isOdd) return const Divider();
+          /*2*/
+
+          final index = i ~/ 2; /*3*/
+          if (index >= _suggestions.length) {
+            for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+              print("OK");
+
+              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+            }
+          }
+          return _buildRow(_suggestions[index]);
+        });
+  }
+
+  Widget _buildRow(WelcomeFoods food) {
+    final alreadySaved = _saved.contains(food);
+    return ListTile(
+      title: Text(
+        food.description.toString().titleCase,
+        style: _biggerFont,
+      ),
+      trailing: Icon(
+        alreadySaved ? Icons.delete : Icons.add_circle_outline,
+        color: alreadySaved ? Colors.red : null,
+        semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(food);
+          } else {
+            _saved.add(food);
+          }
+        });
+      },
+    );
   }
 
   @override
