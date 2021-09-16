@@ -300,6 +300,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //handle sign in
     await Firebase.initializeApp();
     try {
+      //Handle sign in silently
       await _googleSignIn.signInSilently();
     } catch (error) {
       print(error);
