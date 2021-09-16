@@ -76,5 +76,15 @@ Both:
 huihuihuihuih
 
 ---
+## Screenshots
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/1.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/2.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/3.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/4.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/5.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/6.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/7.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/8.png)
+![image](https://raw.githubusercontent.com/nicolekwon/sw-mini-project/master/images/9.png)
 
 [Back to the Top](#sw-mini-project)
