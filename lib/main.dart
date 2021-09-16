@@ -39,32 +39,23 @@ class ShowDetail extends StatelessWidget {
     // Managing potential null value of brand name
     String obj, obj2, obj3;
     result.brandName ??= 'N/A';
-    if (result.brandName == 'N/A')
-      {
-        obj = result.brandName!;
-      }
-    else
-      {
-        obj = result.brandName!.titleCase;
-      }
+    if (result.brandName == 'N/A') {
+      obj = result.brandName!;
+    } else {
+      obj = result.brandName!.titleCase;
+    }
 
     result.ingredients ??= 'N/A';
-    if (result.ingredients == 'N/A')
-    {
+    if (result.ingredients == 'N/A') {
       obj2 = result.ingredients!;
-    }
-    else
-    {
+    } else {
       obj2 = result.ingredients!.titleCase;
     }
 
     result.foodCategory ??= 'N/A';
-    if (result.foodCategory == 'N/A')
-    {
+    if (result.foodCategory == 'N/A') {
       obj3 = result.foodCategory!;
-    }
-    else
-    {
+    } else {
       obj3 = result.foodCategory!.titleCase;
     }
 
@@ -84,7 +75,8 @@ class ShowDetail extends StatelessWidget {
                 height: 80,
                 alignment: Alignment.center,
                 child: Text(result.lowercaseDescription!.titleCase,
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ),
             ),
           ],
@@ -97,8 +89,7 @@ class ShowDetail extends StatelessWidget {
                 "Category: ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              Text(obj3,
-                  style: TextStyle(fontSize: 20))
+              Flexible(child: Text(obj3, style: TextStyle(fontSize: 20)))
             ],
           ),
         ),
@@ -110,8 +101,7 @@ class ShowDetail extends StatelessWidget {
                 "Brand Name: ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              Text(obj,
-                  style: TextStyle(fontSize: 20))
+              Text(obj, style: TextStyle(fontSize: 20))
             ],
           ),
         ),
@@ -127,6 +117,21 @@ class ShowDetail extends StatelessWidget {
             style: TextStyle(fontSize: 15),
           ),
         ),
+        Padding(
+          padding: EdgeInsets.only(top: 20, left: 20),
+          child: Text("Nutrients: ",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+        ),
+        Padding(
+            padding: EdgeInsets.only(left: 20),
+            child: Column(
+              children: [
+                for (var nutrient in result.foodNutrients!)
+                  Text(
+                      "${nutrient!.nutrientName!.toString()}: ${nutrient.nutrientNumber.toString()}${nutrient.unitName.toString().toLowerCase()}  ")
+              ],
+              crossAxisAlignment: CrossAxisAlignment.start,
+            )),
       ]),
     );
   }
@@ -299,17 +304,15 @@ class _MyHomePageState extends State<MyHomePage> {
       print(error);
     }
     try {
-      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: _currentUser!.email,
-          password: _currentUser!.id
-      );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: _currentUser!.email, password: _currentUser!.id);
       print('A user found for that email.');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _currentUser!.email,
-            password: _currentUser!.id
-        );
+        UserCredential userCredential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+                email: _currentUser!.email, password: _currentUser!.id);
         print('No user found for that email.');
       }
     }
@@ -376,7 +379,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Welcome test = await scanBarcodeNormal();
                               Navigator.of(context).push(new MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                  new RandomWords2(test)));
+                                      new RandomWords2(test)));
                               // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                             },
                           )),
@@ -465,36 +468,45 @@ class RandomWords extends StatefulWidget {
 
 class _RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        itemCount: widget.passedResult.foods!.length,
-        itemBuilder: /*1*/ (context, i) {
-          _suggestions.clear();
-          if (i.isOdd) return const Divider();
-          /*2*/
+    if (widget.passedResult.foods!.length == 0) {
+      return Column(mainAxisAlignment: MainAxisAlignment.center,children: [
+          Row(children: [
+            Text("No foods found.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
+          ], mainAxisAlignment: MainAxisAlignment.center,)
+      ],);
+    } else {
+      return ListView.builder(
+          padding: const EdgeInsets.all(16.0),
+          itemCount: widget.passedResult.foods!.length,
+          itemBuilder: /*1*/ (context, i) {
+            _suggestions.clear();
+            if (i.isOdd) return const Divider();
+            /*2*/
 
-          final index = i; /*3*/
-          if (index >= _suggestions.length) {
-            if (widget.passedResult.foods!.length >= 1) {
-              for (var i = 0; i < widget.passedResult.foods!.length; i++) {
-                //print(widget.passedResult.foods![i]!.description);
-                _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+            final index = i; /*3*/
+            if (index >= _suggestions.length) {
+              if (widget.passedResult.foods!.length >= 1) {
+                for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+                  //print(widget.passedResult.foods![i]!.description);
+                  _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+                }
               }
             }
-          }
-          return _buildRow(_suggestions[index], false);
-        });
+            return _buildRow(_suggestions[index], false);
+          });
+    }
   }
 
   Widget _buildRow(WelcomeFoods food, bool full) {
     final alreadySaved = _saved.contains(food);
-    String obj = food.description.toString().titleCase + ', ' + food.brandName.toString().titleCase;
-    if (food.brandName.toString().titleCase == 'Null')
-      {
-        obj = food.description.toString().titleCase;
-      }
+    String obj = food.description.toString().titleCase +
+        ', ' +
+        food.brandName.toString().titleCase;
+    if (food.brandName.toString().titleCase == 'Null') {
+      obj = food.description.toString().titleCase;
+    }
 
-    if( !full) {
+    if (!full) {
       return ListTile(
         title: Text(
           obj,
@@ -516,14 +528,13 @@ class _RandomWordsState extends State<RandomWords> {
         },
       );
     } else {
-     return ListTile(
-       title: Text(
-         '',
-         style: _biggerFont,
-       ),
-     );
-
-   }
+      return ListTile(
+        title: Text(
+          '',
+          style: _biggerFont,
+        ),
+      );
+    }
   }
 
   @override
@@ -579,9 +590,10 @@ class _RandomWordsState2 extends State<RandomWords2> {
 
   Widget _buildRow(WelcomeFoods food) {
     final alreadySaved = _saved.contains(food);
-    String obj = food.description.toString().titleCase + ', ' + food.brandName.toString().titleCase;
-    if (food.brandName.toString().titleCase == 'Null')
-    {
+    String obj = food.description.toString().titleCase +
+        ', ' +
+        food.brandName.toString().titleCase;
+    if (food.brandName.toString().titleCase == 'Null') {
       obj = food.description.toString().titleCase;
     }
     return ListTile(
