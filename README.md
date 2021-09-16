@@ -77,13 +77,15 @@ huihuihuihuih
 
 ---
 ## Screenshots
-<img src="../master/images/1.png" width="200">
-<img src="../master/images/2.png" width="200">
-<img src="../master/images/3.png" width="200">
-<img src="../master/images/4.png" width="200">
-<img src="../master/images/5.png" width="200">
-<img src="../master/images/6.png" width="200">
-<img src="../master/images/7.png" width="200">
-<img src="../master/images/8.png" width="200">
-<img src="../master/images/9.png" width="200">
+<p float="left">
+<img src="../master/images/1.png" width="250">
+<img src="../master/images/2.png" width="250">
+<img src="../master/images/3.png" width="250">
+<img src="../master/images/4.png" width="250">
+<img src="../master/images/5.png" width="250">
+<img src="../master/images/6.png" width="250">
+<img src="../master/images/7.png" width="250">
+<img src="../master/images/8.png" width="250">
+<img src="../master/images/9.png" width="250">
+</p>
 [Back to the Top](#sw-mini-project)
