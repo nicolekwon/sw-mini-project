@@ -205,7 +205,7 @@ Future<Welcome> scanBarcodeNormal() async {
   final response = await http.get(Uri.parse(
       'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
           obj +
-          '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+          '&pageSize=2&api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'));
   welcome = new Welcome.fromJson(json.decode(response.body));
   return welcome;
 }
@@ -272,6 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
       _handleSignIn();
+
     });
   }
 
@@ -299,7 +300,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //handle sign in
     await Firebase.initializeApp();
     try {
-      await _googleSignIn.signIn();
+      await _googleSignIn.signInSilently();
     } catch (error) {
       print(error);
     }
