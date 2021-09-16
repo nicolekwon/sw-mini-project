@@ -33,6 +33,38 @@ class ShowDetail extends StatelessWidget {
   ShowDetail(this.result);
 
   Widget _buildDetails(WelcomeFoods result) {
+    // Managing potential null value of brand name
+    String obj, obj2, obj3;
+    result.brandName ??= 'N/A';
+    if (result.brandName == 'N/A')
+      {
+        obj = result.brandName!;
+      }
+    else
+      {
+        obj = result.brandName!.titleCase;
+      }
+
+    result.ingredients ??= 'N/A';
+    if (result.ingredients == 'N/A')
+    {
+      obj2 = result.ingredients!;
+    }
+    else
+    {
+      obj2 = result.ingredients!.titleCase;
+    }
+
+    result.foodCategory ??= 'N/A';
+    if (result.foodCategory == 'N/A')
+    {
+      obj3 = result.foodCategory!;
+    }
+    else
+    {
+      obj3 = result.foodCategory!.titleCase;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(result.description!.titleCase),
@@ -41,11 +73,15 @@ class ShowDetail extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
+            Container(
+              margin: EdgeInsets.all(10),
               padding: EdgeInsets.all(20),
-              child: Text(
-                result.lowercaseDescription!.titleCase,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              child: Container(
+                width: 350,
+                height: 80,
+                alignment: Alignment.center,
+                child: Text(result.lowercaseDescription!.titleCase,
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
               ),
             ),
           ],
@@ -58,7 +94,20 @@ class ShowDetail extends StatelessWidget {
                 "Category: ",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
-              Text(result.foodCategory!.titleCase,
+              Text(obj3,
+                  style: TextStyle(fontSize: 20))
+            ],
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Text(
+                "Brand Name: ",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+              Text(obj,
                   style: TextStyle(fontSize: 20))
             ],
           ),
@@ -71,7 +120,7 @@ class ShowDetail extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 20),
           child: Text(
-            result.ingredients!,
+            obj2,
             style: TextStyle(fontSize: 15),
           ),
         ),
@@ -136,30 +185,21 @@ class _ItemListState extends State<ItemList> {
   }
 }
 
-// Implementing scanning mechanism
-Future<List> scanBarcodeNormal() async {
-  String name = 'Unknown';
-  String description = 'Unknown';
+// Implementing barcode scanning mechanism
+Future<Welcome> scanBarcodeNormal() async {
   String barcodeScanRes = 'Unknown';
+  Welcome welcome;
 
   // Platform messages may fail, so we use a try/catch PlatformException.
-  try {
-    barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-        '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-    String obj = barcodeScanRes.substring(1);
-    final response = await http.get(Uri.parse(
-        'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
-            obj +
-            '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
-    Welcome welcome = new Welcome.fromJson(json.decode(response.body));
-    //Example of parsing
-    name = welcome.foods![0]!.description!;
-    description = welcome.foods![0]!.ingredients!;
-  } on PlatformException {
-    name = 'Failed to get platform version.';
-  }
-
-  return [name, description];
+  barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+      '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+  String obj = barcodeScanRes.substring(1);
+  final response = await http.get(Uri.parse(
+      'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+          obj +
+          '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
+  welcome = new Welcome.fromJson(json.decode(response.body));
+  return welcome;
 }
 
 void main() {
@@ -312,8 +352,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           suffixIcon: IconButton(
                             icon: Icon(CupertinoIcons.camera),
                             onPressed: () async {
-                              List test = await scanBarcodeNormal();
-                              print(test);
+                              Welcome test = await scanBarcodeNormal();
+                              Navigator.of(context).push(new MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                  new RandomWords2(test)));
                               // Navigator.of(context).push(new MaterialPageRoute(builder: (BuildContext context) => new MyScanner()));
                             },
                           )),
@@ -390,91 +432,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// Barcode Scanner
-class MyScanner extends StatefulWidget {
-  @override
-  _MyScannerState createState() => _MyScannerState();
-}
-
-class _MyScannerState extends State<MyScanner> {
-  String _scanName = '';
-  String _scanDescription = '';
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> scanBarcodeNormal() async {
-    String name = 'Unknown';
-    String description = 'Unknown';
-    String barcodeScanRes = 'Unknown';
-
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-      String obj = barcodeScanRes.substring(1);
-      final response = await http.get(Uri.parse(
-          'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
-              obj +
-              '&pageSize=2&api_key=P0bCXahLXwmyB10bwd0T8ZqQNT7bNOyim4yiNm5V'));
-      Welcome welcome = new Welcome.fromJson(json.decode(response.body));
-      //Example of parsing
-      name = welcome.foods![0]!.description!;
-      description = welcome.foods![0]!.ingredients!;
-    } on PlatformException {
-      name = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _scanName = name;
-      _scanDescription = description;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Barcode Scan'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.list),
-              onPressed: () {
-                pushSaved(context);
-              },
-            ),
-          ],
-        ),
-        body: Builder(builder: (BuildContext context) {
-          return Container(
-              alignment: Alignment.center,
-              padding: const EdgeInsets.all(20.0),
-              child: Flex(
-                  direction: Axis.vertical,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    ElevatedButton(
-                        onPressed: () {
-                          scanBarcodeNormal();
-                        },
-                        child: Text('Start barcode scan')),
-                    Text(
-                        '\nName: $_scanName \n\nIngredients: $_scanDescription \n',
-                        style: TextStyle(fontSize: 20))
-                  ]));
-        }));
-  }
-}
-
-// Search Bar
+// Search Bar Results
 class RandomWords extends StatefulWidget {
   final Welcome passedResult;
 
@@ -498,23 +456,27 @@ class _RandomWordsState extends State<RandomWords> {
           if (index >= _suggestions.length) {
             if (widget.passedResult.foods!.length >= 1) {
               for (var i = 0; i < widget.passedResult.foods!.length; i++) {
-                print(widget.passedResult.foods![i]!.description);
-
+                //print(widget.passedResult.foods![i]!.description);
                 _suggestions.add(widget.passedResult.foods![i]!); /*4*/
               }
             }
           }
-          print(index);
           return _buildRow(_suggestions[index], false);
         });
   }
 
   Widget _buildRow(WelcomeFoods food, bool full) {
     final alreadySaved = _saved.contains(food);
-   if( !full) {
+    String obj = food.description.toString().titleCase + ', ' + food.brandName.toString().titleCase;
+    if (food.brandName.toString().titleCase == 'Null')
+      {
+        obj = food.description.toString().titleCase;
+      }
+
+    if( !full) {
       return ListTile(
         title: Text(
-          food.description.toString().titleCase,
+          obj,
           style: _biggerFont,
         ),
         trailing: Icon(
@@ -541,6 +503,86 @@ class _RandomWordsState extends State<RandomWords> {
      );
 
    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Results'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.list),
+            onPressed: () {
+              pushSaved(context);
+            },
+          ),
+        ],
+      ),
+      body: _buildSuggestions(),
+    );
+  }
+}
+
+// Barcode Scanner Results
+class RandomWords2 extends StatefulWidget {
+  final Welcome passedResult;
+
+  RandomWords2(this.passedResult);
+
+  @override
+  State<RandomWords2> createState() => _RandomWordsState2();
+}
+
+class _RandomWordsState2 extends State<RandomWords2> {
+  Widget _buildSuggestions() {
+    return ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        itemCount: 1,
+        itemBuilder: /*1*/ (context, i) {
+          _suggestions.clear();
+          if (i.isOdd) return const Divider();
+          /*2*/
+
+          final index = i ~/ 2; /*3*/
+          if (index >= _suggestions.length) {
+            for (var i = 0; i < widget.passedResult.foods!.length; i++) {
+              print("OK");
+
+              _suggestions.add(widget.passedResult.foods![i]!); /*4*/
+            }
+          }
+          return _buildRow(_suggestions[index]);
+        });
+  }
+
+  Widget _buildRow(WelcomeFoods food) {
+    final alreadySaved = _saved.contains(food);
+    String obj = food.description.toString().titleCase + ', ' + food.brandName.toString().titleCase;
+    if (food.brandName.toString().titleCase == 'Null')
+    {
+      obj = food.description.toString().titleCase;
+    }
+    return ListTile(
+      title: Text(
+        obj,
+        style: _biggerFont,
+      ),
+      trailing: Icon(
+        alreadySaved ? Icons.delete : Icons.add_circle_outline,
+        color: alreadySaved ? Colors.red : null,
+        semanticLabel: alreadySaved ? 'Remove from saved' : 'Save',
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(food);
+          } else {
+            _saved.add(food);
+          }
+        });
+      },
+    );
   }
 
   @override
