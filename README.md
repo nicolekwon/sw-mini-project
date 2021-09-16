@@ -77,14 +77,14 @@ huihuihuihuih
 
 ---
 ## Screenshots
-![image](../images/images/1.png)
-![image](../images/images/2.png)
-![image](../images/images/3.png)
-![image](../images/images/4.png)
-![image](../images/images/5.png)
-![image](../images/images/6.png)
-![image](../images/images/7.png)
-![image](../images/images/8.png)
-![image](../images/images/9.png)
+![image](../images/1.png)
+![image](../images/2.png)
+![image](../images/3.png)
+![image](../images/4.png)
+![image](../images/5.png)
+![image](../images/6.png)
+![image](../images/7.png)
+![image](../images/8.png)
+![image](../images/9.png)
 
 [Back to the Top](#sw-mini-project)
