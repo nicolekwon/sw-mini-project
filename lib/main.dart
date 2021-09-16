@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -10,6 +12,7 @@ import 'package:recase/recase.dart';
 
 // Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
+FirebaseAuth auth = FirebaseAuth.instance;
 
 // Initializing Firebase API and helper methods
 final _suggestions = <WelcomeFoods>[];
@@ -256,6 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       setState(() {
         _currentUser = account;
+        //print(_currentUser);
       });
       if (_currentUser != null) {
         setState(() {
@@ -288,10 +292,26 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<void> _handleSignIn() async {
     //handle sign in
+    await Firebase.initializeApp();
     try {
       await _googleSignIn.signIn();
     } catch (error) {
       print(error);
+    }
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _currentUser!.email,
+          password: _currentUser!.id
+      );
+      print('A user found for that email.');
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _currentUser!.email,
+            password: _currentUser!.id
+        );
+        print('No user found for that email.');
+      }
     }
   }
 
@@ -299,6 +319,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget build(BuildContext context) {
     GoogleSignInAccount? user = _currentUser;
+
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -372,7 +393,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           var result = await search(searchterm);
                           Welcome welcome =
                               new Welcome.fromJson(json.decode(result.body));
-                          print(welcome.foods![0]!.ingredients);
+                          //print(welcome.foods![0]!.ingredients);
                           Navigator.of(context).push(new MaterialPageRoute(
                               builder: (BuildContext context) =>
                                   new RandomWords(welcome)));
