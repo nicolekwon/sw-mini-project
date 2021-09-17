@@ -78,7 +78,20 @@ Both:
 
 ## Explanation
 
-We took the road less traveled and decided to learn Flutter.
+We took the road less traveled and decided to learn Flutter. The code in folder "lib" is refactored into...
+
+1. models -> results.dart: This dart file contains the classes of the different JSON files (i.e. search results and from the FDA API) 
+2. main.dart: This dart file contains all of the app's code, including its widgets and helper methods. Due to the time constraint of this project, we were not able to clean and refactor this file further, but this coding practice is incredible important, and the existing code structure should be changed for the future.
+
+### Main Code Breakdown (from top to bottom)
+- Initializing Google sign-in authentication, Firebase API, and helper methods
+- Implementing shopping list widget, along with its formatting and parsing of information
+- Implementing barcode scanning method 
+- Creating home page state
+- Initializing sign-in method
+- Implementing searching method 
+- Initializing sign-out method
+- Showing results of search bar and barcode scanning states 
 
 ---
 
