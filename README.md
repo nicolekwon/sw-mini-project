@@ -55,7 +55,6 @@ Sprint 4: 9/13/21-9/17/21
 - [x] Fixing bugs
 - [x] Cleaning up and finalizing code
 
-
 #### Division of Work
 
 Yanni:
@@ -84,6 +83,7 @@ We took the road less traveled and decided to learn Flutter. The code in folder 
 2. main.dart: This dart file contains all of the app's code, including its widgets and helper methods. Due to the time constraint of this project, we were not able to clean and refactor this file further, but this coding practice is incredible important, and the existing code structure should be changed for the future.
 
 ### Main Code Breakdown (from top to bottom)
+
 - Initializing Google sign-in authentication, Firebase API, and helper methods
 - Implementing shopping list widget, along with its formatting and parsing of information
 - Implementing barcode scanning method 
@@ -92,6 +92,10 @@ We took the road less traveled and decided to learn Flutter. The code in folder 
 - Implementing searching method 
 - Initializing sign-out method
 - Showing results of search bar and barcode scanning states 
+
+### Design Decisions
+
+When deciding the framework of our application, we decided to go with Flutter due to its user friendliness and cleanliness. Flutter is cross-platform and has a similar performance to React Native but has an even better repository of built-in, flexible, and open-source UI components and APIs. As first-time coders of mobile applications and due to the scope of this project, we valued all of these qualities within a framework. We decided to pair Flutter and its coding language Dart with Android Studio because of the IDE's ability to emulate different Android and iOS devices, which was extremely convenient during the entire design process, as testing was constantly happening throughout our sprints. 
 
 ---
 
