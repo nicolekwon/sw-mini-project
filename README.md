@@ -58,15 +58,18 @@ Sprint 4: 9/13/21-9/17/21
 #### Division of Work
 
 Yanni:
-- Barcode scanner and search bar
-- Route to different pages
+- Search bar
+- Model of parsed JSON file
+- Firebase for Gmail authentication 
 
 Nicole: 
-- Firebase (for Gmail authentication and database of recipes)
-- Call to FDA API
+- Barcode scanner 
+- GET and POST REST APIs for Firebase's Firestore database
 
 Both: 
-- Creation of recipe functionality
+- Format and implementation of shopping list
+- Call to FDA API
+- Route to different pages
 - Clean UI and coding practices
 
 
