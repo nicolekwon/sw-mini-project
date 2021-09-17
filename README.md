@@ -50,9 +50,9 @@ Sprint 3: 9/8/21-9/12/21
 - [x] Connecting components together
 
 Sprint 4: 9/13/21-9/17/21
-- [ ] Calling Firebase for storing and adding foods that were added by the user
+- [x] Calling Firebase for storing and adding foods that were added by the user
 - [x] Continuing to connect components
-- [ ] Cleaning up and finalizing code
+- [x] Cleaning up and finalizing code
 
 
 #### Division of Work
