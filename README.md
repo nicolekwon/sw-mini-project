@@ -17,7 +17,7 @@
 
 ## Description
 
-This is a shopping list app designed for shoppers who frequently forget what they need to purchase at the store. The shopping list is protected behind Google authentication and the list's contents are sync'd to Google's Firestore via Firebase. A user can use the implemented barcode scanner to look up their food.
+This is a shopping list app designed for shoppers who frequently forget what they need to purchase at the store. The shopping list is protected behind Google authentication, and the list's contents are sync'd to Google's Firestore via Firebase. A user can use the implemented barcode scanner by or search bar to look up their food.
 
 ---
 
