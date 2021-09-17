@@ -432,7 +432,6 @@ class _MyHomePageState extends State<MyHomePage> {
           if (result.data()["user"] == _currentUser!.email)
           {
             stored = result.data();
-            print('PO O OP OO OO ');
             print(stored);
             stored.remove('user');
           }
