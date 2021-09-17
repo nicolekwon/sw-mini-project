@@ -95,7 +95,7 @@ We took the road less traveled and decided to learn Flutter. The code in folder 
 
 ### Design Decisions
 
-When deciding the framework of our application, we decided to go with Flutter due to its user friendliness and cleanliness. Flutter is cross-platform and has a similar performance to React Native but has an even better repository of built-in, flexible, and open-source UI components and APIs. As first-time coders of mobile applications and due to the scope of this project, we valued all of these qualities within a framework. We decided to pair Flutter and its coding language Dart with Android Studio because of the IDE's ability to emulate different Android and iOS devices, which was extremely convenient during the entire design process, as testing was constantly happening throughout our sprints. 
+When deciding the framework of our application, we decided to go with Flutter due to its user friendliness and cleanliness. Flutter is cross-platform and has a similar performance to React Native but has an even better repository of built-in, flexible, and open-source UI components and APIs. As first-time coders of mobile applications and due to the scope of this project, we valued all of these qualities within a framework. We decided to pair Flutter and its coding language Dart with Android Studio because of the IDE's ability to emulate different Android and iOS devices, which was extremely convenient during the entire design process, as testing was constantly happening throughout our sprints. Android Studio was also intuitive with Github, as we were able to easily clone, commit and push, and fetch from this repository with a simple click rather than worrying about commands. 
 
 ---
 
