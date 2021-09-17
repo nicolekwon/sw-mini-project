@@ -11,6 +11,7 @@
 - [Description of Mini-Project](#description)
 - [Journal of Agile Development](#journal)
 - [Explanation of Code](#explanation) 
+- [Screenshots/Videos of Project](#screenshots-and-videos) 
 
 ---
 
@@ -76,7 +77,9 @@ Both:
 We took the road less traveled and decided to learn Flutter.
 
 ---
-## Screenshots
+
+## Screenshots and Videos
+
 <p float="left">
 <img src="../master/images/1.png" width="250">
 <img src="../master/images/2.png" width="250">
