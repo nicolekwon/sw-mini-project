@@ -278,7 +278,6 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
       _handleSignIn();
-      _addUser();
     });
   }
 
@@ -301,49 +300,36 @@ class _MyHomePageState extends State<MyHomePage> {
   // Handling sign out
   Future<void> _handleSignOut() async {
     // POST API - Call the user's CollectionReference to update shopping list
-    String title, cat, brand, ing, entry, entry2;
+    String entry, id;
     int count = 1;
-    List<String> nut = List<String>.filled(50, '', growable: true);
     final firestoreInstance = FirebaseFirestore.instance;
+    print('_saved');
+    print(_saved);
 
-    _saved.forEach((k)
-    {
-      entry = 'food' + count.toString();
-      entry2 = 'nutrient' + count.toString();
-      title = k.description.toString();
-      cat = k.foodCategory.toString();
-      brand = k.brandName.toString();
-      ing = k.ingredients.toString();
+    var collection = FirebaseFirestore.instance.collection('users');
+    var snapshot = await collection.where(
+        'user', isEqualTo: _currentUser!.email).get();
+    await snapshot.docs.first.reference.delete();
 
-      for (var nutrient in k.foodNutrients!)
-        {
-          nut[0] = nutrient!.nutrientName!.toString();
-          nut[1] = nutrient.nutrientNumber.toString();
-          nut[2] = nutrient.unitName.toString().toLowerCase();
-        }
-
-      firestoreInstance.collection("users").doc(_currentUser!.email).update(
+    // If the user does not have an empty shopping list
+    if (_saved.isNotEmpty) {
+      firestoreInstance.collection("users").doc(_currentUser!.email).set(
           {
-            entry: title,
-          });
-      firestoreInstance.collection("users").doc(_currentUser!.email).collection(entry).add(
-          {
-            "category": cat,
-            "brand": brand,
-            "ingredients": ing,
-            "nutrients": nut,
-          });
-      firestoreInstance.collection("users").doc(_currentUser!.email).collection(entry).doc(entry2).set(
-          {
-            "nutrient name": nut[0],
-            "nutrient number": nut[1],
-            "nutrient unit": nut[2],
+            "user": _currentUser!.email,
           });
 
-      print('$k');
-      count++;
-    });
+      _saved.forEach((k) {
+        entry = 'food' + count.toString();
+        id = k.fdcId.toString();
 
+        firestoreInstance.collection("users").doc(_currentUser!.email).update(
+            {
+              entry: id,
+            });
+        print('$k');
+        count++;
+      });
+    }
     _googleSignIn.signOut();
     FirebaseAuth.instance.signOut();
 
@@ -353,12 +339,14 @@ class _MyHomePageState extends State<MyHomePage> {
   // Initializing Firestore instance
   Future<void> _addUser() async {
     var users = FirebaseFirestore.instance.collection('users');
-    final firestoreInstance = FirebaseFirestore.instance;
+    var stored, id;
+    var firestoreInstance = FirebaseFirestore.instance;
     FirebaseFirestore.instance
         .collection('users')
         .doc(_currentUser!.email)
         .get()
         .then((DocumentSnapshot documentSnapshot) {
+
       // GET API - Call the user's CollectionReference to read an existing user and their data
       if (documentSnapshot.exists) {
         print('Document exists on the database');
@@ -370,8 +358,30 @@ class _MyHomePageState extends State<MyHomePage> {
             });
         print('Document created on the database');
       }
-      //WelcomeFoods welcome = users.doc(_currentUser!.email).get() as WelcomeFoods;
-      //_saved.add(welcome);
+
+      firestoreInstance.collection("users").get().then((querySnapshot) {
+        querySnapshot.docs.forEach((result) {
+          if (result.data()["user"] == _currentUser!.email)
+          {
+            stored = result.data();
+            print(stored);
+            stored.remove('user');
+          }
+        });
+        stored.forEach((key, value) async {
+          print('Key: $key');
+          print('Value: $value');
+          print('------------------------------');
+          id = value;
+          final response = await http.get(Uri.parse(
+              'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+                  id +
+                  '&pageSize=2&api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'));
+          Welcome welcome = new Welcome.fromJson(json.decode(response.body));
+          WelcomeFoods obj = welcome.foods![0]!;
+          _saved.add(obj);
+        });
+      });
     });
 
   }
@@ -395,6 +405,53 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     await FirebaseAuth.instance.signInWithCredential(credential);
     print('A user found for that email.');
+
+    var users = FirebaseFirestore.instance.collection('users');
+    var stored, id;
+    var firestoreInstance = FirebaseFirestore.instance;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser!.email)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+
+      // GET API - Call the user's CollectionReference to read an existing user and their data
+      if (documentSnapshot.exists) {
+        print('Document exists on the database');
+      }
+      else {
+        firestoreInstance.collection("users").doc(_currentUser!.email).set(
+            {
+              "user": _currentUser!.email,
+            });
+        print('Document created on the database');
+      }
+
+      firestoreInstance.collection("users").get().then((querySnapshot) {
+        querySnapshot.docs.forEach((result) {
+          if (result.data()["user"] == _currentUser!.email)
+          {
+            stored = result.data();
+            print('PO O OP OO OO ');
+            print(stored);
+            stored.remove('user');
+          }
+        });
+        stored.forEach((key, value) async {
+          print('Key: $key');
+          print('Value: $value');
+          print('------------------------------');
+          id = value;
+          final response = await http.get(Uri.parse(
+              'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+                  id +
+                  '&pageSize=2&api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'));
+          Welcome welcome = new Welcome.fromJson(json.decode(response.body));
+          WelcomeFoods obj = welcome.foods![0]!;
+          _saved.add(obj);
+        });
+      });
+    });
 
   }
 
