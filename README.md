@@ -52,6 +52,7 @@ Sprint 3: 9/8/21-9/12/21
 Sprint 4: 9/13/21-9/17/21
 - [x] Calling Firebase for storing and adding foods that were added by the user
 - [x] Continuing to connect components
+- [x] Fixing bugs
 - [x] Cleaning up and finalizing code
 
 
