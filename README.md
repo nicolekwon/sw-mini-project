@@ -23,7 +23,7 @@ This is a shopping list app designed for shoppers who frequently forget what the
 
 ## Journal
 
-Written below is a general outline of the project's different sprints. Each item was updated and checked off after it was finished. For more information about bugs and tasks, please refer to the Github Issues. 
+Written below is an outline of the project's different sprints. Each item was updated and checked off after it was finished. For more information about bugs and tasks, please refer to the Github Issues. 
 
 #### Sprint Outline
 
