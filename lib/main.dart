@@ -9,15 +9,16 @@ import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'dart:convert';
 import 'package:miniproject1/models/results.dart';
 import 'package:recase/recase.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 // Initializing Google sign-in authentication
 GoogleSignIn _googleSignIn = GoogleSignIn();
-FirebaseAuth auth = FirebaseAuth.instance;
 
 // Initializing Firebase API and helper methods
 final _suggestions = <WelcomeFoods>[];
 final _saved = <WelcomeFoods>{};
 final _biggerFont = const TextStyle(fontSize: 18.0);
+late final stored;
 
 // Implementing list icon on app bar
 void pushSaved(BuildContext context) {
@@ -30,6 +31,7 @@ void showDetail(BuildContext context, WelcomeFoods food) {
       builder: (BuildContext context) => new ShowDetail(food)));
 }
 
+// Displaying and dealing with details of specific food in shopping list
 class ShowDetail extends StatelessWidget {
   WelcomeFoods result;
 
@@ -142,6 +144,7 @@ class ShowDetail extends StatelessWidget {
   }
 }
 
+// Creating and formatting shopping list
 class ItemList extends StatefulWidget {
   const ItemList({Key? key}) : super(key: key);
 
@@ -210,6 +213,7 @@ Future<Welcome> scanBarcodeNormal() async {
   return welcome;
 }
 
+// Setting up and running application
 void main() {
   runApp(MyApp());
 }
@@ -218,6 +222,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    Firebase.initializeApp();
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -237,6 +242,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
+// Creating home page for application
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key? key, required this.title}) : super(key: key);
 
@@ -272,11 +278,10 @@ class _MyHomePageState extends State<MyHomePage> {
         });
       }
       _handleSignIn();
-
     });
   }
 
-  //Handle sign out
+  // Implementing search functionality
   Future<http.Response> search(String item) async {
     final res = await http.post(
       Uri.parse(
@@ -292,40 +297,162 @@ class _MyHomePageState extends State<MyHomePage> {
     return res;
   }
 
+  // Handling sign out
   Future<void> _handleSignOut() async {
+    // POST API - Call the user's CollectionReference to update shopping list
+    String entry, id;
+    int count = 1;
+    final firestoreInstance = FirebaseFirestore.instance;
+    print('_saved');
+    print(_saved);
+
+    var collection = FirebaseFirestore.instance.collection('users');
+    var snapshot = await collection.where(
+        'user', isEqualTo: _currentUser!.email).get();
+    await snapshot.docs.first.reference.delete();
+
+    // If the user does not have an empty shopping list
+    if (_saved.isNotEmpty) {
+      firestoreInstance.collection("users").doc(_currentUser!.email).set(
+          {
+            "user": _currentUser!.email,
+          });
+
+      _saved.forEach((k) {
+        entry = 'food' + count.toString();
+        id = k.fdcId.toString();
+
+        firestoreInstance.collection("users").doc(_currentUser!.email).update(
+            {
+              entry: id,
+            });
+        print('$k');
+        count++;
+      });
+    }
     _googleSignIn.signOut();
-    await FirebaseAuth.instance.signOut();
+    FirebaseAuth.instance.signOut();
+
+    _saved.clear();
   }
 
+  // Initializing Firestore instance
+  Future<void> _addUser() async {
+    var users = FirebaseFirestore.instance.collection('users');
+    var stored, id;
+    var firestoreInstance = FirebaseFirestore.instance;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser!.email)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+
+      // GET API - Call the user's CollectionReference to read an existing user and their data
+      if (documentSnapshot.exists) {
+        print('Document exists on the database');
+      }
+      else {
+        firestoreInstance.collection("users").doc(_currentUser!.email).set(
+            {
+              "user": _currentUser!.email,
+            });
+        print('Document created on the database');
+      }
+
+      firestoreInstance.collection("users").get().then((querySnapshot) {
+        querySnapshot.docs.forEach((result) {
+          if (result.data()["user"] == _currentUser!.email)
+          {
+            stored = result.data();
+            print(stored);
+            stored.remove('user');
+          }
+        });
+        stored.forEach((key, value) async {
+          print('Key: $key');
+          print('Value: $value');
+          print('------------------------------');
+          id = value;
+          final response = await http.get(Uri.parse(
+              'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+                  id +
+                  '&pageSize=2&api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'));
+          Welcome welcome = new Welcome.fromJson(json.decode(response.body));
+          WelcomeFoods obj = welcome.foods![0]!;
+          _saved.add(obj);
+        });
+      });
+    });
+
+  }
+
+  // Handling sign in
   Future<void> _handleSignIn() async {
-    //handle sign in
+    FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
       await _googleSignIn.signIn();
     } catch (error) {
       print(error);
     }
-    await Firebase.initializeApp();
-    final GoogleSignInAuthentication googleAuth = await _currentUser!.authentication;
-    // try {
-    //   UserCredential userCredential = await FirebaseAuth.instance
-    //       .signInWithEmailAndPassword(
-    //           email: _currentUser.email, password: _currentUser.id);
-    //   print('A user found for that email.');
-    // } on FirebaseAuthException catch (e) {
-    //   if (e.code == 'user-not-found') {
-    //     UserCredential userCredential = await FirebaseAuth.instance
-    //         .createUserWithEmailAndPassword(
-    //             email: _currentUser!.email, password: _currentUser!.id);
-    //     print('No user found for that email.');
-    //   }
-    // }
+
+    final GoogleSignInAuthentication googleAuth =
+        await _currentUser!.authentication;
+
     final credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-      await FirebaseAuth.instance.signInWithCredential(credential);
-      print('A user found for that email.');
+    await FirebaseAuth.instance.signInWithCredential(credential);
+    print('A user found for that email.');
+
+    var users = FirebaseFirestore.instance.collection('users');
+    var stored, id;
+    var firestoreInstance = FirebaseFirestore.instance;
+    FirebaseFirestore.instance
+        .collection('users')
+        .doc(_currentUser!.email)
+        .get()
+        .then((DocumentSnapshot documentSnapshot) {
+
+      // GET API - Call the user's CollectionReference to read an existing user and their data
+      if (documentSnapshot.exists) {
+        print('Document exists on the database');
+      }
+      else {
+        firestoreInstance.collection("users").doc(_currentUser!.email).set(
+            {
+              "user": _currentUser!.email,
+            });
+        print('Document created on the database');
+      }
+
+      firestoreInstance.collection("users").get().then((querySnapshot) {
+        querySnapshot.docs.forEach((result) {
+          if (result.data()["user"] == _currentUser!.email)
+          {
+            stored = result.data();
+            print('PO O OP OO OO ');
+            print(stored);
+            stored.remove('user');
+          }
+        });
+        stored.forEach((key, value) async {
+          print('Key: $key');
+          print('Value: $value');
+          print('------------------------------');
+          id = value;
+          final response = await http.get(Uri.parse(
+              'https://api.nal.usda.gov/fdc/v1/foods/search?query=' +
+                  id +
+                  '&pageSize=2&api_key=zoLDtB28FubnioDyjhhrgpp2rmkZAnHmf2G3QXVP'));
+          Welcome welcome = new Welcome.fromJson(json.decode(response.body));
+          WelcomeFoods obj = welcome.foods![0]!;
+          _saved.add(obj);
+        });
+      });
+    });
+
   }
 
   var searchterm;
@@ -449,7 +576,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               ElevatedButton.icon(
-                onPressed: _handleSignIn,
+                onPressed: () {
+                  _handleSignIn();
+                },
                 label: Text('Login with Google!'),
                 icon: Icon(Icons.login),
               )
@@ -461,7 +590,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-// Search Bar Results
+// Generating search bar results
 class RandomWords extends StatefulWidget {
   final Welcome passedResult;
 
@@ -474,11 +603,20 @@ class RandomWords extends StatefulWidget {
 class _RandomWordsState extends State<RandomWords> {
   Widget _buildSuggestions() {
     if (widget.passedResult.foods!.length == 0) {
-      return Column(mainAxisAlignment: MainAxisAlignment.center,children: [
-          Row(children: [
-            Text("No foods found.", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),)
-          ], mainAxisAlignment: MainAxisAlignment.center,)
-      ],);
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              Text(
+                "No foods found.",
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+              )
+            ],
+            mainAxisAlignment: MainAxisAlignment.center,
+          )
+        ],
+      );
     } else {
       return ListView.builder(
           padding: const EdgeInsets.all(16.0),
@@ -561,7 +699,7 @@ class _RandomWordsState extends State<RandomWords> {
   }
 }
 
-// Barcode Scanner Results
+// Generating barcode scanner results
 class RandomWords2 extends StatefulWidget {
   final Welcome passedResult;
 
