@@ -118,6 +118,8 @@ To automate testing of building and compile our Flutter app, we decided to use G
 <img src="../master/images/8.png" width="250">
 <img src="../master/images/9.png" width="250">
 <img src="../master/images/10.png" width="250">
+<img src="../master/images/13.png" width="250">
+<img src="../master/images/14.png" width="250">
 <img src="../master/images/11.png">
 <img src="../master/images/12.png">
 </p>
