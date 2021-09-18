@@ -107,6 +107,8 @@ To automate testing of building and compile our Flutter app, we decided to use G
 
 ## Screenshots and Videos
 
+[Link to Video](youtube.com)
+
 <p float="left">
 <img src="../master/images/1.png" width="250">
 <img src="../master/images/2.png" width="250">
@@ -123,7 +125,5 @@ To automate testing of building and compile our Flutter app, we decided to use G
 <img src="../master/images/11.png" width="760">
 <img src="../master/images/12.png" width="760">
 </p>
-
-[Link to Video](youtube.com)
 
 [Back to the Top](#sw-mini-project)
