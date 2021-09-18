@@ -107,7 +107,7 @@ To automate testing of building and compile our Flutter app, we decided to use G
 
 ## Screenshots and Videos
 
-[Link to Video](youtube.com)
+[Link to Video](https://www.youtube.com/watch?v=fgPuB9Khd8M)
 
 <p float="left">
 <img src="../master/images/1.png" width="250">
