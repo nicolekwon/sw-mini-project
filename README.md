@@ -117,6 +117,7 @@ To automate testing of building and compile our Flutter app, we decided to use G
 <img src="../master/images/7.png" width="250">
 <img src="../master/images/8.png" width="250">
 <img src="../master/images/9.png" width="250">
+<img src="../master/images/10.png" width="250">
 </p>
 
 [Back to the Top](#sw-mini-project)
