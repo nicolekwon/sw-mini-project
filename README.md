@@ -22,6 +22,7 @@ This is a shopping list app designed for shoppers who frequently forget what the
 ---
 
 ## Journal
+Given two weeks to learn and develop a full stack application, here are the steps we took.
 
 Written below is an outline of the project's different sprints. Each item was updated and checked off after it was finished. For more information about bugs and tasks, please refer to the Github Issues. 
 
